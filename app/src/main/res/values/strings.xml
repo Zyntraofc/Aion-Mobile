@@ -1,0 +1,32 @@
+<resources>
+    <!--  Nativos Mobile  -->
+    <string name="app_name">Aion</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!--  Splash Screen  -->
+    <string name="btnContinuar.SplashScreen">
+        <p>
+            <strong>Continuar</strong>
+        </p>
+    </string>
+
+    <!--  Login  -->
+    <string name="lblcodigo_Empresa">Código da Empresa</string>
+    <string name="hintTxtcodigo_Empresa">Código da sua empresa</string>
+    <string name="lblmatricula">Matrícula</string>
+    <string name="hintTxtmatricula">Sua matricula aqui</string>
+    <string name="lblsenha">Senha</string>
+    <string name="hintTxtsenha">Sua senha aqui</string>
+    <string name="rbuttom">Lembre de mim</string>
+    <string name="txtesqueceu_senha">
+        <u>
+            Esqueceu sua senha?
+        </u>
+    </string>
+    <string name="btnentrar">Entrar</string>
+    <string name="lblSouEmpresa">Sou empresa</string>
+    <string name="btnCadastrar">Cadastre-se</string>
+
+</resources>
