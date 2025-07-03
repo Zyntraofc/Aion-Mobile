@@ -43,13 +43,13 @@
             <TextView
                 android:id="@+id/lblcodigo_Empresa"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="14dp"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="0dp"
                 android:fontFamily="@font/poppins_regular"
                 android:text="@string/lblcodigo_Empresa"
                 android:textColor="@color/dark_gray"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <EditText
                 android:id="@+id/txtcodigo_empresa"
@@ -61,7 +61,7 @@
                 android:fontFamily="@font/poppins_light"
                 android:hint="@string/hintTxtcodigo_Empresa"
                 android:inputType="text"
-                android:paddingBottom="20dp"
+                android:paddingBottom="12.5dp"
                 android:textColorHint="@color/light_gray" />
 
         </LinearLayout>
@@ -89,11 +89,11 @@
             <TextView
                 android:id="@+id/lblmatricula"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="12dp"
                 android:layout_marginStart="30dp"
                 android:text="@string/lblmatricula"
                 android:textColor="@color/dark_gray"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <EditText
                 android:id="@+id/txtmatricula"
@@ -102,9 +102,10 @@
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
                 android:ems="10"
+                android:fontFamily="@font/poppins_light"
                 android:hint="@string/hintTxtmatricula"
                 android:inputType="text"
-                android:paddingBottom="20dp"
+                android:paddingBottom="12.5dp"
                 android:textColorHint="@color/light_gray" />
 
         </LinearLayout>
@@ -132,11 +133,11 @@
             <TextView
                 android:id="@+id/lblsenha"
                 android:layout_width="wrap_content"
-                android:layout_height="16dp"
+                android:layout_height="12dp"
                 android:layout_marginStart="30dp"
                 android:text="@string/lblsenha"
                 android:textColor="@color/dark_gray"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
 
             <EditText
                 android:id="@+id/txtsenha"
@@ -145,9 +146,10 @@
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
                 android:ems="10"
+                android:fontFamily="@font/poppins_light"
                 android:hint="@string/hintTxtsenha"
                 android:inputType="text"
-                android:paddingBottom="20dp"
+                android:paddingBottom="12.5dp"
                 android:textColorHint="@color/light_gray" />
 
         </LinearLayout>
@@ -200,22 +202,23 @@
         android:id="@+id/btncadastrar"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="40dp"
         android:fontFamily="@font/poppins_bold"
         android:text="@string/btnCadastrar"
         android:textColor="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="218dp" />
+        app:layout_constraintStart_toEndOf="@+id/lblsou_empresa" />
 
     <TextView
         android:id="@+id/lblsou_empresa"
         android:layout_width="wrap_content"
         android:layout_height="18dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginBottom="40dp"
         android:fontFamily="@font/poppins_regular"
         android:text="@string/lblSouEmpresa"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btncadastrar" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
