@@ -72,6 +72,12 @@ src/
 ## ✅ Boas Práticas
 
 - Commits semânticos (padronização com Conventional Commits)
+   - "fix:..."      - Commits de correção de bugs ou conflitos solucionados.
+   - "feat:..."     - Commits que indicam que seu trecho de código está incluindo um novo recurso (Funcionalidade nova).
+   - "style:..."    - Commits do tipo style indicam que houveram alterações referentes a formatações de código (Não inclui alterações em código).
+   - "refactor:..." - Commits do tipo refactor referem-se a mudanças em relação ao funcionamento. Ex.: Mudei a forma como é feita o envio de email. (Não mudei porque estava errado e sim porque ou uma refatoração na regra de negócio)
+   - "build:..."    - Commits do tipo build são utilizados quando são realizadas modificações em arquivos de build e dependências.
+
 - PRs com descrição clara e checklist de revisão
 - Testes unitários obrigatórios para novas funcionalidades
 - Revisões semanais de dependências (segurança e performance)
