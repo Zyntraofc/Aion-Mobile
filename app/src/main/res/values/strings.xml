@@ -15,8 +15,8 @@
     <!--  Login  -->
     <string name="lblcodigo_Empresa">Código da Empresa</string>
     <string name="hintTxtcodigo_Empresa">Código da sua empresa</string>
-    <string name="lblmatricula">Matrícula</string>
-    <string name="hintTxtmatricula">Sua matricula aqui</string>
+    <string name="lblemail">Email</string>
+    <string name="hintTxtemail">exemplo@gmail.com</string>
     <string name="lblsenha">Senha</string>
     <string name="hintTxtsenha">Sua senha aqui</string>
     <string name="rbuttom">Lembre de mim</string>
