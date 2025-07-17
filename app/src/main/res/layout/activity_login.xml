@@ -13,25 +13,24 @@
         android:id="@+id/logo"
         android:layout_width="184dp"
         android:layout_height="184dp"
-        android:layout_marginTop="96dp"
         android:src="@drawable/logotipo_aionzyntra"
+        app:layout_constraintBottom_toTopOf="@+id/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/codigo_empresa"
+        android:id="@+id/email"
         android:layout_width="390dp"
         android:layout_height="60dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/edittext_border"
         app:cardCornerRadius="40dp"
         app:cardElevation="0dp"
         app:contentPaddingLeft="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="354dp"
@@ -41,69 +40,23 @@
             android:paddingTop="10dp">
 
             <TextView
-                android:id="@+id/lblcodigo_Empresa"
-                android:layout_width="wrap_content"
-                android:layout_height="14dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="0dp"
-                android:fontFamily="@font/poppins_regular"
-                android:text="@string/lblcodigo_Empresa"
-                android:textColor="@color/dark_gray"
-                android:textSize="10sp" />
-
-            <EditText
-                android:id="@+id/txtcodigo_empresa"
-                android:layout_width="305dp"
-                android:layout_height="47dp"
-                android:layout_marginStart="30dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:fontFamily="@font/poppins_light"
-                android:hint="@string/hintTxtcodigo_Empresa"
-                android:inputType="text"
-                android:paddingBottom="12.5dp"
-                android:textColorHint="@color/light_gray" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/matricula"
-        android:layout_width="390dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        app:cardCornerRadius="40dp"
-        app:cardElevation="0dp"
-        app:contentPaddingLeft="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/codigo_empresa">
-
-        <LinearLayout
-            android:layout_width="354dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edittext_border"
-            android:orientation="vertical"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:id="@+id/lblmatricula"
+                android:id="@+id/lblemail"
                 android:layout_width="wrap_content"
                 android:layout_height="12dp"
                 android:layout_marginStart="30dp"
-                android:text="@string/lblmatricula"
+                android:text="@string/lblemail"
                 android:textColor="@color/dark_gray"
                 android:textSize="10sp" />
 
             <EditText
-                android:id="@+id/txtmatricula"
+                android:id="@+id/txtemail"
                 android:layout_width="305dp"
                 android:layout_height="47dp"
                 android:layout_marginStart="30dp"
                 android:autofillHints=""
                 android:ems="10"
                 android:fontFamily="@font/poppins_light"
-                android:hint="@string/hintTxtmatricula"
+                android:hint="@string/hintTxtemail"
                 android:inputType="text"
                 android:paddingBottom="12.5dp"
                 android:textColorHint="@color/light_gray" />
@@ -121,7 +74,7 @@
         app:contentPaddingLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/matricula">
+        app:layout_constraintTop_toBottomOf="@id/email">
 
         <LinearLayout
             android:layout_width="354dp"
@@ -139,7 +92,7 @@
                 android:textColor="@color/dark_gray"
                 android:textSize="10sp" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtsenha"
                 android:layout_width="305dp"
                 android:layout_height="47dp"
@@ -148,33 +101,19 @@
                 android:ems="10"
                 android:fontFamily="@font/poppins_light"
                 android:hint="@string/hintTxtsenha"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:paddingBottom="12.5dp"
                 android:textColorHint="@color/light_gray" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <RadioButton
-        android:id="@+id/rememberMeRadioButton"
-        android:layout_width="161dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="15dp"
-        android:buttonTint="@color/light_gray"
-        android:fontFamily="@font/poppins_medium"
-        android:text="@string/rbuttom"
-        android:textColor="@color/medium_gray"
-        android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/senha" />
-
     <TextView
         android:id="@+id/lblesqueceu_senha"
         android:layout_width="wrap_content"
         android:layout_height="19dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="40dp"
         android:fontFamily="@font/poppins_medium"
         android:text="@string/txtesqueceu_senha"
         android:textColor="@color/blue"
@@ -186,17 +125,17 @@
         android:id="@+id/btnentrar"
         android:layout_width="354dp"
         android:layout_height="60dp"
-        android:layout_marginTop="20dp"
         android:fontFamily="@font/poppins_semibold"
         android:text="@string/btnentrar"
         android:textAllCaps="false"
         android:textSize="16sp"
         app:backgroundTint="@color/blue_primary"
         app:cornerRadius="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/btncadastrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lblesqueceu_senha" />
+        app:layout_constraintTop_toBottomOf="@+id/lblesqueceu_senha" />
 
     <TextView
         android:id="@+id/btncadastrar"
@@ -219,6 +158,19 @@
         android:fontFamily="@font/poppins_regular"
         android:text="@string/lblSouEmpresa"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/lblerro_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="@font/poppins_regular"
+        android:text=""
+        android:textColor="@color/dark_gray"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/email"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

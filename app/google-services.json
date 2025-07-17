@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "249471087737",
+    "project_id": "aion-e719d",
+    "storage_bucket": "aion-e719d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:249471087737:android:34413574bc423ff78350a8",
+        "android_client_info": {
+          "package_name": "com.aula.aion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAtsrA5QnHFoSaeHpo1Cz_Ix7mWEjmRsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
