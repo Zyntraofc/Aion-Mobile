@@ -46,7 +46,7 @@ public class SplashScreen extends AppCompatActivity {
                     // Email do usuário logado
                     String userEmail = currentUser.getEmail();
 
-                    Intent homeIntent = new Intent(this, MainActivity.class);
+                    Intent homeIntent = new Intent(this, Inicio.class);
                     startActivity(homeIntent);
                 } else {
                     Intent intent = new Intent(SplashScreen.this, Login.class);
