@@ -1,14 +1,7 @@
 package com.aula.aion;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -35,8 +28,12 @@ public class Login extends AppCompatActivity {
         binding.btnentrar.setOnClickListener(v -> {
             String email = binding.txtemail.getText().toString();
             String senha = binding.txtsenha.getText().toString();
-            AutenticarUsuario(email, senha);
-
+            if ("".equals(email) || email.isEmpty() || "".equals(senha) || senha.isEmpty()) {
+                binding.lblerroLogin.setText("Preencha todos os campos");
+            }
+            else {
+                AutenticarUsuario(email, senha);
+            }
         });
 
     }
