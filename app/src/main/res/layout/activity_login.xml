@@ -92,7 +92,7 @@
                 android:textColor="@color/dark_gray"
                 android:textSize="10sp" />
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtsenha"
                 android:layout_width="305dp"
                 android:layout_height="47dp"
@@ -101,7 +101,7 @@
                 android:ems="10"
                 android:fontFamily="@font/poppins_light"
                 android:hint="@string/hintTxtsenha"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:paddingBottom="12.5dp"
                 android:textColorHint="@color/light_gray" />
 
@@ -167,7 +167,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginBottom="5dp"
         android:fontFamily="@font/poppins_regular"
-        android:text="TextView"
+        android:text=""
         android:textColor="@color/dark_gray"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/email"
