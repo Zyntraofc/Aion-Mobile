@@ -2,10 +2,12 @@ package com.aula.aion;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.aula.aion.databinding.ActivityLoginBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -29,5 +32,25 @@ public class Login extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        binding.btnentrar.setOnClickListener(v -> {
+            String email = binding.txtemail.getText().toString();
+            String senha = binding.txtsenha.getText().toString();
+            AutenticarUsuario(email, senha);
+
+        });
+
+    }
+    private void AutenticarUsuario(String email, String senha) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        binding.lblerroLogin.setVisibility(binding.lblerroLogin.VISIBLE);
+                        binding.lblerroLogin.setText("E-mail ou senha inválidos");
+                    }
+                });
     }
 }
