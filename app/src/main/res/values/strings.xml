@@ -1,9 +1,9 @@
 <resources>
-    <!--  Nativos Mobile  -->
+    <!--  Telas Mobile  -->
     <string name="app_name">Aion</string>
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_justificativa">Justificar Falta</string>
+    <string name="title_reclamacao">Reclamações</string>
 
     <!--  Splash Screen  -->
     <string name="btnContinuar.SplashScreen">
@@ -28,5 +28,49 @@
     <string name="btnentrar">Entrar</string>
     <string name="lblSouEmpresa">Sou empresa</string>
     <string name="btnCadastrar">Cadastre-se</string>
+
+    <!--  Perfil  -->
+
+    <!--  Estatíticas  -->
+
+    <string name="lblestatistica">Estatísticas</string>
+    <!--  Meu Desempenho  -->
+    <string name="lblmeudesempenho">Meu desempenho</string>
+    <string name="descbuttommeudesempenho">ir para o meu desempenho</string>
+
+    <!--  Historico de notificacoes  -->
+    <string name="lblhistoriconotificacoes">Histórico de notificações</string>
+    <string name="descbuttomhistoriconotificacoes">Ir para o histórico de notificações</string>
+
+    <!--  Assesibilidade  -->
+    <string name="ir">ir</string>
+    <string name="descnotificacoes">TODO</string>
+    <string name="lbl_notificacoes">Notificações</string>
+    <string name="lbl_suporte">Suporte</string>
+    <string name="lbl_localizacao">Ativar Localização</string>
+    <string name="desc_idioma">Selecionar Idioma</string>
+    <string name="lbl_idioma">Idioma</string>
+    <string name="lbl_assessibilidade">Assessibilidade</string>
+    <string name="str_txt_perfil">Perfil</string>
+    <string name="desc_voltar">TODO</string>
+    <string name="lbl_cargo">Analista de Dados</string>
+    <string name="lbl_nome">Jefferson Custodio</string>
+    <string name="lbl_email">jefferson.lopes@jbs.com.br</string>
+    <string name="btn_editarPerfil">Editar Perfil</string>
+    <string name="btn_sair">Sair</string>
+    <string name="abrDomingo">D</string>
+    <string name="abrSegunda">S</string>
+    <string name="abrTerca">T</string>
+    <string name="abrQuarta">Q</string>
+    <string name="abrQuinta">Q</string>
+    <string name="abrSexta">S</string>
+    <string name="abrSabado">S</string>
+    <string name="desc_btnAvancar">Próximo Mês</string>
+    <string-array name="my_options_array">
+        <item>Português (Brasil)</item>
+        <item>Ingles (United States)</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
