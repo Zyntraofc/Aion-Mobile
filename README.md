@@ -77,6 +77,7 @@ src/
    - "style:..."    - Commits do tipo style indicam que houveram alterações referentes a formatações de código (Não inclui alterações em código).
    - "refactor:..." - Commits do tipo refactor referem-se a mudanças em relação ao funcionamento. Ex.: Mudei a forma como é feita o envio de email. (Não mudei porque estava errado e sim porque ou uma refatoração na regra de negócio)
    - "build:..."    - Commits do tipo build são utilizados quando são realizadas modificações em arquivos de build e dependências.
+   - "del:..."      - Commits que indicam a deleção de itens do projeto.
 
 - PRs com descrição clara e checklist de revisão
 - Testes unitários obrigatórios para novas funcionalidades
