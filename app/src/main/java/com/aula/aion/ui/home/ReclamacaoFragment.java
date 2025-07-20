@@ -12,10 +12,10 @@ import com.aula.aion.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Reclamacao#newInstance} factory method to
+ * Use the {@link ReclamacaoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Reclamacao extends Fragment {
+public class ReclamacaoFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class Reclamacao extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Reclamacao() {
+    public ReclamacaoFragment() {
         // Required empty public constructor
     }
 
@@ -39,8 +39,8 @@ public class Reclamacao extends Fragment {
      * @return A new instance of fragment Reclamacao.
      */
     // TODO: Rename and change types and number of parameters
-    public static Reclamacao newInstance(String param1, String param2) {
-        Reclamacao fragment = new Reclamacao();
+    public static ReclamacaoFragment newInstance(String param1, String param2) {
+        ReclamacaoFragment fragment = new ReclamacaoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

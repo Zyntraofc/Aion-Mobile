@@ -12,10 +12,10 @@ import com.aula.aion.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Dashboards#newInstance} factory method to
+ * Use the {@link DashboardsFragments#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Dashboards extends Fragment {
+public class DashboardsFragments extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class Dashboards extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Dashboards() {
+    public DashboardsFragments() {
         // Required empty public constructor
     }
 
@@ -39,8 +39,8 @@ public class Dashboards extends Fragment {
      * @return A new instance of fragment Dashboards.
      */
     // TODO: Rename and change types and number of parameters
-    public static Dashboards newInstance(String param1, String param2) {
-        Dashboards fragment = new Dashboards();
+    public static DashboardsFragments newInstance(String param1, String param2) {
+        DashboardsFragments fragment = new DashboardsFragments();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
