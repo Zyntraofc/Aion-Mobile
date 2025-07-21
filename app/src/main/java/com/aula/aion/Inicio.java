@@ -47,11 +47,11 @@ public class Inicio extends AppCompatActivity {
             // IDs dos seus fragmentos de topo no mobile_navigation.xml
             // Adapte conforme os IDs reais do seu 'nav_menu.xml'
             AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.home,
-                    R.id.justificativa,
+                    R.id.nav_home,
+                    R.id.nav_justificativa,
                     R.id.nav_batida, //Batida de ponto
-                    R.id.reclamacao,
-                    R.id.dashboard)
+                    R.id.nav_reclamacao,
+                    R.id.nav_dashboard)
                     .build();
 
             // Conecta a BottomNavigationView ao NavController

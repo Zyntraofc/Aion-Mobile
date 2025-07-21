@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/home">
+    app:startDestination="@+id/nav_home">
 
     <fragment
-        android:id="@+id/home"
+        android:id="@+id/nav_home"
         android:name="com.aula.aion.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
     <fragment
-        android:id="@+id/justificativa"
-        android:name="com.aula.aion.ui.home.Justificativa"
+        android:id="@+id/nav_justificativa"
+        android:name="com.aula.aion.ui.home.JustificativaFragment"
         android:label="fragment_justificativa"
         tools:layout="@layout/fragment_justificativa" />
     <fragment
-        android:id="@+id/reclamacao"
-        android:name="com.aula.aion.ui.home.Reclamacao"
+        android:id="@+id/nav_reclamacao"
+        android:name="com.aula.aion.ui.home.ReclamacaoFragment"
         android:label="fragment_reclamacao"
         tools:layout="@layout/fragment_reclamacao" />
     <fragment
-        android:id="@+id/dashboard"
-        android:name="com.aula.aion.ui.home.Dashboards"
+        android:id="@+id/nav_dashboard"
+        android:name="com.aula.aion.ui.home.DashboardsFragments"
         android:label="fragment_dashboards"
         tools:layout="@layout/fragment_dashboards" />
 </navigation>
