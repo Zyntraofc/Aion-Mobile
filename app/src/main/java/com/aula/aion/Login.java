@@ -25,11 +25,11 @@ public class Login extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.btnentrar.setOnClickListener(v -> {
-            String email = binding.txtemail.getText().toString();
-            String senha = binding.txtsenha.getText().toString();
+        binding.btnEntrar.setOnClickListener(v -> {
+            String email = binding.inputEmail.getText().toString();
+            String senha = binding.inputSenha.getText().toString();
             if ("".equals(email) || email.isEmpty() || "".equals(senha) || senha.isEmpty()) {
-                binding.lblerroLogin.setText("Preencha todos os campos");
+                binding.txtErroLogin.setText("Preencha todos os campos");
             }
             else {
                 AutenticarUsuario(email, senha);
@@ -45,8 +45,8 @@ public class Login extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-                        binding.lblerroLogin.setVisibility(binding.lblerroLogin.VISIBLE);
-                        binding.lblerroLogin.setText("E-mail ou senha inválidos");
+                        binding.txtErroLogin.setVisibility(binding.txtErroLogin.VISIBLE);
+                        binding.txtErroLogin.setText("E-mail ou senha inválidos");
                     }
                 });
     }

@@ -10,5 +10,4 @@ build/
 .idea/
 *.iml
 
-# Others
 local.properties

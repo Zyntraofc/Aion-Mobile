@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.aula.aion.databinding.ActivityPerfilBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Perfil extends AppCompatActivity {
 
@@ -33,6 +34,13 @@ public class Perfil extends AppCompatActivity {
 
         binding = ActivityPerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.btnSair.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(Perfil.this, Login.class);
+            startActivity(intent);
+            finish();
+        });
 
         binding.mySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
