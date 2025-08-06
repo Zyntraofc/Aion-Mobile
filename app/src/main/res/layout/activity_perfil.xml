@@ -8,6 +8,7 @@
     tools:context=".Perfil"
     android:id="@+id/main">
 
+    <!-- Include da barra de perfil -->
     <include
         android:id="@+id/perfilNavBar"
         layout="@layout/barra_perfil"
@@ -16,24 +17,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+   
     <!-- Avatar e informações -->
-
-
-    <!-- Card Estatísticas -->
-
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/img_fotoPerfil"
         android:layout_width="128dp"
         android:layout_height="131dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="125dp"
+        android:contentDescription="@string/desc_fotoPerfil"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/foto" />
 
-
     <TextView
-        android:id="@+id/text_cargo"
+        android:id="@+id/txt_cargo"
         android:layout_width="wrap_content"
         android:layout_height="15dp"
         android:layout_marginStart="24dp"
@@ -42,11 +40,11 @@
         android:text="@string/lbl_cargo"
         android:textColor="@color/text_gray"
         android:textSize="13sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintStart_toEndOf="@+id/img_fotoPerfil"
+        app:layout_constraintTop_toTopOf="@+id/img_fotoPerfil" />
 
     <TextView
-        android:id="@+id/text_nome"
+        android:id="@+id/txt_nome"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
         android:layout_marginTop="4dp"
@@ -54,22 +52,22 @@
         android:text="@string/lbl_nome"
         android:textSize="20sp"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/text_cargo"
-        app:layout_constraintTop_toBottomOf="@+id/text_cargo" />
+        app:layout_constraintStart_toStartOf="@+id/txt_cargo"
+        app:layout_constraintTop_toBottomOf="@+id/txt_cargo" />
 
     <TextView
-        android:id="@+id/text_email"
+        android:id="@+id/txt_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_medium"
         android:text="@string/lbl_email"
         android:textColor="@color/text_gray"
         android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/text_nome"
-        app:layout_constraintTop_toBottomOf="@+id/text_nome" />
+        app:layout_constraintStart_toStartOf="@+id/txt_nome"
+        app:layout_constraintTop_toBottomOf="@+id/txt_nome" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/button"
+        android:id="@+id/btn_editarPerfil"
         android:layout_width="153dp"
         android:layout_height="50dp"
         app:cornerRadius="10dp"
@@ -80,26 +78,27 @@
         android:textAllCaps="false"
         android:textSize="12sp"
         android:fontFamily="@font/poppins_medium"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/text_email"
+        app:layout_constraintBottom_toBottomOf="@+id/img_fotoPerfil"
+        app:layout_constraintStart_toEndOf="@+id/img_fotoPerfil"
+        app:layout_constraintTop_toBottomOf="@+id/txt_email"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- Card Estatísticas -->
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txt_estatistica"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="22dp"
-        android:text="@string/lblestatistica"
+        android:text="@string/txt_estatistica"
         android:textColor="@color/text_gray"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/img_fotoPerfil" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardEstatisticas"
+        android:id="@+id/crd_Estatisticas"
         android:layout_width="368dp"
         android:layout_height="126dp"
         android:layout_marginHorizontal="16dp"
@@ -108,7 +107,7 @@
         app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/txt_estatistica">
 
 
         <LinearLayout
@@ -117,7 +116,6 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <!-- Meu desempenho -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -131,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lblmeudesempenho"
+                    android:text="@string/desc_meuDesempenho"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp" />
 
@@ -139,7 +137,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/round_backgroud_buttons_perfil"
-                    android:contentDescription="@string/descbuttommeudesempenho"
+                    android:contentDescription="@string/desc_meuDesempenho"
                     android:padding="12dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/seta" />
@@ -151,7 +149,6 @@
                 android:layout_gravity="center"
                 android:background="#EEEEEE" />
 
-            <!-- Meu desempenho -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,7 +162,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lblhistoriconotificacoes"
+                    android:text="@string/txt_historicoNotificacoes"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp" />
 
@@ -173,7 +170,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:background="@drawable/round_backgroud_buttons_perfil"
-                    android:contentDescription="@string/ir"
+                    android:contentDescription="@string/desc_historicoNotificacoes"
                     android:padding="12dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/seta" />
@@ -182,20 +179,20 @@
     </androidx.cardview.widget.CardView>
 
     <TextView
-        android:id="@+id/textAcessibilidade"
+        android:id="@+id/txt_acessibilidade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginTop="12dp"
-        android:text="@string/lbl_assessibilidade"
+        android:text="@string/txt_assessibilidade"
         android:textColor="@color/text_gray"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardEstatisticas" />
+        app:layout_constraintTop_toBottomOf="@+id/crd_Estatisticas" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardAssessibilidade"
+        android:id="@+id/crdAssessibilidade"
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -204,7 +201,7 @@
         app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textAcessibilidade">
+        app:layout_constraintTop_toBottomOf="@+id/txt_acessibilidade">
 
 
         <LinearLayout
@@ -213,7 +210,6 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <!-- Notificações -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,34 +218,30 @@
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp">
 
-                <!-- Ícone de idioma -->
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:contentDescription="@string/desc_idioma"
+                    android:contentDescription="@string/spr_idioma"
                     android:src="@drawable/idioma"
                     app:tint="@color/text_gray" />
 
-                <!-- Texto "Idioma" -->
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_idioma"
+                    android:text="@string/txt_idioma"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp" />
 
                 <Spinner
-                    android:id="@+id/my_spinner"
+                    android:id="@+id/spr_idioma"
                     android:layout_width="207dp"
                     android:layout_height="wrap_content"
                     android:entries="@array/my_options_array"
                     tools:layout_editor_absoluteX="140dp"
                     tools:layout_editor_absoluteY="670dp" />
-
-                <!-- Spinner de idioma -->
 
             </LinearLayout>
 
@@ -270,7 +262,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:contentDescription="@string/descnotificacoes"
+                    android:contentDescription="@string/desc_notificacoes"
                     android:src="@drawable/sino"
                     app:tint="@color/text_gray" />
 
@@ -280,12 +272,12 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_notificacoes"
+                    android:text="@string/txt_notificacoes"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp" />
 
                 <com.aula.aion.widgets.CustomSwitch
-                    android:id="@+id/customSwitchNotificacoes"
+                    android:id="@+id/swt_notificacoes"
                     android:layout_width="65dp"
                     android:layout_height="37dp"
                     android:layout_gravity="center_vertical"
@@ -309,7 +301,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:contentDescription="@string/descnotificacoes"
+                    android:contentDescription="@string/desc_localizacao"
                     android:src="@drawable/localizacao"
                     app:tint="@color/text_gray" />
 
@@ -319,12 +311,12 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_localizacao"
+                    android:text="@string/txt_localizacao"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp" />
 
                 <com.aula.aion.widgets.CustomSwitch
-                    android:id="@+id/customSwitch"
+                    android:id="@+id/swt_localizacao"
                     android:layout_width="65dp"
                     android:layout_height="37dp"
                     android:layout_gravity="center_vertical"
@@ -338,7 +330,6 @@
                 android:layout_gravity="center"
                 android:background="#EEEEEE" />
 
-            <!-- Meu desempenho -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -350,7 +341,7 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:contentDescription="@string/descnotificacoes"
+                    android:contentDescription="@string/desc_notificacoes"
                     android:src="@drawable/suporte"
                     app:tint="@color/text_gray" />
 
@@ -360,7 +351,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_suporte"
+                    android:text="@string/txt_suporte"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp" />
 
@@ -368,7 +359,7 @@
                     android:layout_width="38dp"
                     android:layout_height="38dp"
                     android:background="@drawable/round_backgroud_buttons_perfil"
-                    android:contentDescription="@string/ir"
+                    android:contentDescription="@string/desc_suporte"
                     android:padding="11dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/seta" />
@@ -393,12 +384,12 @@
         android:paddingBottom="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardAssessibilidade">
+        app:layout_constraintTop_toBottomOf="@+id/crdAssessibilidade">
 
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:contentDescription="@string/descnotificacoes"
+            android:contentDescription="@string/btn_sair"
             android:src="@drawable/sair"
             app:tint="@color/red" />
 
