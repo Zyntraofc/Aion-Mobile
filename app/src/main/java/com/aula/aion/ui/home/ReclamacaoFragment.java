@@ -3,64 +3,49 @@ package com.aula.aion.ui.home;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aula.aion.R;
+import com.aula.aion.adapter.ReclamacaoAdapter;
+import com.aula.aion.databinding.FragmentReclamacaoBinding;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ReclamacaoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
+import com.aula.aion.R;
+import com.aula.aion.model.Reclamacao;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class ReclamacaoFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    FragmentReclamacaoBinding binding;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ReclamacaoFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Reclamacao.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ReclamacaoFragment newInstance(String param1, String param2) {
-        ReclamacaoFragment fragment = new ReclamacaoFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public ReclamacaoFragment(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reclamacao, container, false);
+        binding = FragmentReclamacaoBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
+        RecyclerView recyclerView = binding.reclamacaoRecyclerView;
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        List<Reclamacao> lista = new ArrayList<>();
+        lista.add(new Reclamacao("Ambiente de Trabalho", "bdeyuvdfouevaovdfoa","18/07/2025"));
+        lista.add(new Reclamacao("Abuso Sexual", "bdeyuvdfouevaovdfoa","18/07/2025"));
+
+        ReclamacaoAdapter adapter = new ReclamacaoAdapter(lista);
+        recyclerView.setAdapter(adapter);
+        return view;
+    }
+
+    //Limpa quando a instancia morre
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

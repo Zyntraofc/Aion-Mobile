@@ -42,18 +42,18 @@ public class Perfil extends AppCompatActivity {
             finish();
         });
 
-        binding.mySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.sprIdioma.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                binding.mySpinner.setSelection(position);
+                binding.sprIdioma.setSelection(position);
                 if(selectedItem.equals("Ingles (United States)"))
                     Toast.makeText(Perfil.this, "Você selecionou: " + selectedItem, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                binding.mySpinner.setSelection(0);
+                binding.sprIdioma.setSelection(0);
             }
         });
 
