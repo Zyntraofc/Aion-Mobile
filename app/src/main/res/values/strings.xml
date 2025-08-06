@@ -6,51 +6,51 @@
     <string name="title_reclamacao">Reclamações</string>
 
     <!--  Splash Screen  -->
-    <string name="btnContinuar.SplashScreen">
+    <string name="btn_continuarSplashScreen">
         <p>
             <strong>Continuar</strong>
         </p>
     </string>
 
     <!--  Login  -->
-    <string name="lblcodigo_Empresa">Código da Empresa</string>
-    <string name="hintTxtcodigo_Empresa">Código da sua empresa</string>
-    <string name="lblemail">Email</string>
-    <string name="hintTxtemail">exemplo@gmail.com</string>
-    <string name="lblsenha">Senha</string>
-    <string name="hintTxtsenha">Sua senha aqui</string>
-    <string name="rbuttom">Lembre de mim</string>
-    <string name="txtesqueceu_senha">
+    <string name="lbl_codigoEmpresa">Código da Empresa</string>
+    <string name="hint_codigoEmpresa">Código da sua empresa</string>
+    <string name="txt_email">Email</string>
+    <string name="hint_email">exemplo@gmail.com</string>
+    <string name="txt_senha">Senha</string>
+    <string name="hint_senha">Sua senha aqui</string>
+    <string name="rbtn_lembreDeMim">Lembre de mim</string>
+    <string name="txt_esqueceuSenha">
         <u>
             Esqueceu sua senha?
         </u>
     </string>
-    <string name="btnentrar">Entrar</string>
-    <string name="lblSouEmpresa">Sou empresa</string>
-    <string name="btnCadastrar">Cadastre-se</string>
+    <string name="btn_entrar">Entrar</string>
+    <string name="txt_SouEmpresa">Sou empresa</string>
+    <string name="btn_cadastrar">Cadastre-se</string>
 
     <!--  Perfil  -->
 
     <!--  Estatíticas  -->
 
-    <string name="lblestatistica">Estatísticas</string>
+    <string name="txt_estatistica">Estatísticas</string>
     <!--  Meu Desempenho  -->
-    <string name="lblmeudesempenho">Meu desempenho</string>
-    <string name="descbuttommeudesempenho">ir para o meu desempenho</string>
+    <string name="txt_meuDesempenho">Meu desempenho</string>
+    <string name="desc_meuDesempenho">ir para o meu desempenho</string>
 
     <!--  Historico de notificacoes  -->
-    <string name="lblhistoriconotificacoes">Histórico de notificações</string>
-    <string name="descbuttomhistoriconotificacoes">Ir para o histórico de notificações</string>
+    <string name="txt_historicoNotificacoes">Histórico de notificações</string>
+    <string name="desc_historicoNotificacoes">Ir para o histórico de notificações</string>
 
     <!--  Assesibilidade  -->
-    <string name="ir">ir</string>
-    <string name="descnotificacoes">TODO</string>
-    <string name="lbl_notificacoes">Notificações</string>
-    <string name="lbl_suporte">Suporte</string>
-    <string name="lbl_localizacao">Ativar Localização</string>
-    <string name="desc_idioma">Selecionar Idioma</string>
-    <string name="lbl_idioma">Idioma</string>
-    <string name="lbl_assessibilidade">Assessibilidade</string>
+    <string name="desc_suporte">Ir para o suporte</string>
+    <string name="desc_notificacoes">Ir para o suporte</string>
+    <string name="txt_notificacoes">Notificações</string>
+    <string name="txt_suporte">Suporte</string>
+    <string name="txt_localizacao">Ativar Localização</string>
+    <string name="spr_idioma">Selecionar Idioma</string>
+    <string name="txt_idioma">Idioma</string>
+    <string name="txt_assessibilidade">Assessibilidade</string>
     <string name="str_txt_perfil">Perfil</string>
     <string name="desc_voltar">TODO</string>
     <string name="lbl_cargo">Analista de Dados</string>
@@ -70,7 +70,19 @@
         <item>Português (Brasil)</item>
         <item>Ingles (United States)</item>
     </string-array>
+    <string-array name="reason_array">
+        <item>Conpensar Banco</item>
+        <item>Atestado Médico</item>
+        <item>Declaração de Horas</item>
+        <item>Abono Luto</item>
+        <item>Licenca Maternidade</item>
+        <item>Licenca Paternidade</item>
+        <item>Licenca Gala</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="desc_fotoPerfil">Foto de Perfil</string>
+    <string name="desc_localizacao">Ativar Localização</string>
+    <string name="btn_justificar">Justificar</string>
 
 </resources>

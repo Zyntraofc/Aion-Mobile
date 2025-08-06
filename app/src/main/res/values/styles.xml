@@ -9,4 +9,15 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/light_gray</item>
     </style>
+
+    <style name="FullScreenBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/FullScreenBottomSheet</item>
+    </style>
+
+    <style name="FullScreenBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

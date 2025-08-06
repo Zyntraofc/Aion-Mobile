@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue_primary">#653BFF</color>
+    <color name="blue_primary">#3A47FF</color>
     <color name="purple_secondary">#792CFF</color>
     <color name="aqua_tertiary">#9299FF</color>
     <color name="black">#FF000000</color>
