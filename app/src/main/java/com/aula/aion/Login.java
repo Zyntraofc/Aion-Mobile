@@ -2,6 +2,8 @@ package com.aula.aion;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -9,6 +11,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.aula.aion.databinding.ActivityLoginBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 public class Login extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -45,8 +49,23 @@ public class Login extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
+                        String erro = "";
+                        try {
+                            throw task.getException();
+                        } catch (FirebaseAuthInvalidUserException e)
+                        {
+                            erro = "E-mail não está cadastrado";
+                            Log.e("LoginActivity", erro, e);
+                        }
+                        catch (FirebaseAuthInvalidCredentialsException e)
+                        {
+                            erro = "E-mail ou senha inválidos";
+                            Log.e("LoginActivity", erro, e);
+                        }catch (Exception e){
+                            Log.e("LoginActivity","EXCEPTION", e);
+                        }
+                        binding.txtErroLogin.setText(erro);
                         binding.txtErroLogin.setVisibility(binding.txtErroLogin.VISIBLE);
-                        binding.txtErroLogin.setText("E-mail ou senha inválidos");
                     }
                 });
     }
