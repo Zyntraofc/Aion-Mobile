@@ -16,6 +16,7 @@ import androidx.navigation.ui.AppBarConfiguration; // Importação necessária
 import androidx.navigation.ui.NavigationUI; // Importação necessária
 
 import com.aula.aion.databinding.ActivityInicioBinding;
+import com.aula.aion.ui.home.BottomSheetBatidaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView; // Importação necessária
 
 public class Inicio extends AppCompatActivity {
@@ -56,28 +57,19 @@ public class Inicio extends AppCompatActivity {
 
             // Conecta a BottomNavigationView ao NavController
             NavigationUI.setupWithNavController(navView, navController);
-
-//            navView.setOnItemSelectedListener(item -> {
-//                if (item.getItemId() == R.id.navigation_add_item) { // ID do seu item "mais" no nav_menu
-//                    // Ação personalizada para o botão '+'
-//                    // Por exemplo: Toast.makeText(this, "Botão '+' clicado!", Toast.LENGTH_SHORT).show();
-//                    // Ou iniciar uma nova Activity para adicionar algo
-//                    // Intent intent = new Intent(this, AddItemActivity.class);
-//                    // startActivity(intent);
-//                    return true; // Indica que o evento foi consumido e não deve navegar para um fragmento
-//                } else {
-//                    // Para os outros itens, NavigationUI gerencia a navegação para os fragmentos
-//                    return NavigationUI.onNavDestinationSelected(item, navController);
-//                }
-//            });
         }
+
+        binding.flbBatida.setOnClickListener(view -> {
+            BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
+            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+        });
 
         binding.aionNavBar.profileButton.setOnClickListener(view -> {
             binding.aionNavBar.profileButton.animate()
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationStart(animation);
                             Intent intent = new Intent(Inicio.this, Perfil.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);

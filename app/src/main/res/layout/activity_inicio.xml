@@ -32,13 +32,15 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="17dp"
         android:layout_height="70dp"
         android:layout_marginBottom="14dp"
         android:background="@drawable/bottom_nav_bg"
-        android:elevation="3dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
         app:itemIconSize="28dp"
+        android:layout_gravity="center_vertical"
         app:itemIconTint="@color/bottom_nav_selector"
         app:itemTextColor="@color/bottom_nav_selector"
         app:labelVisibilityMode="unlabeled"
@@ -46,6 +48,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/nav_menu" />
+
+    <ImageView
+        android:id="@+id/flb_batida"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="35dp"
+        app:srcCompat="@drawable/ic_add" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

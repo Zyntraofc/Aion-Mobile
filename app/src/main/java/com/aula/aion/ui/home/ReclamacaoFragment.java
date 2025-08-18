@@ -39,6 +39,12 @@ public class ReclamacaoFragment extends Fragment {
 
         ReclamacaoAdapter adapter = new ReclamacaoAdapter(lista);
         recyclerView.setAdapter(adapter);
+
+        binding.btnReclamar.setOnClickListener(view1 -> {
+            BottomSheetReclamacaoFragment bottomSheet = new BottomSheetReclamacaoFragment();
+            bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
+        });
+
         return view;
     }
 

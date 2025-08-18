@@ -25,7 +25,6 @@ public class JustificativaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Infle o layout usando o binding em vez de findById
         binding = FragmentJustificativaBinding.inflate(inflater, container, false);
         View view = binding.getRoot();
         RecyclerView recyclerView = binding.justificativaRecyclerView;

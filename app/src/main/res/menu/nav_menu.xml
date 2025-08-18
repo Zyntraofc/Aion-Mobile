@@ -4,26 +4,25 @@
     <item
         android:id="@+id/nav_home"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="@string/mn_home" />
 
     <item
         android:id="@+id/nav_justificativa"
         android:icon="@drawable/ic_judge"
-        android:title="Ação" />
+        android:title="@string/mn_justificativa" />
 
     <item
         android:id="@+id/nav_batida"
-        android:icon="@drawable/ic_add"
         android:title="Adicionar" />
 
     <item
         android:id="@+id/nav_reclamacao"
         android:icon="@drawable/ic_complain"
-        android:title="Usuário" />
+        android:title="@string/mn_reclamacao" />
 
     <item
         android:id="@+id/nav_dashboard"
         android:icon="@drawable/ic_chart"
-        android:title="Dashboard" />
+        android:title="@string/mn_dashboard" />
 
 </menu>
