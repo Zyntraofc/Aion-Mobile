@@ -20,4 +20,14 @@
     <style name="FullScreenBottomSheet" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="BottomSheetSlow" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/SlowBottomSheetBehavior</item>
+    </style>
+
+    <style name="SlowBottomSheetBehavior" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:windowEnterAnimation">@anim/slide_up_slow</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_slow</item>
+    </style>
+
 </resources>

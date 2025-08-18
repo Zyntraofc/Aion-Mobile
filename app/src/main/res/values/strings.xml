@@ -84,5 +84,13 @@
     <string name="desc_fotoPerfil">Foto de Perfil</string>
     <string name="desc_localizacao">Ativar Localização</string>
     <string name="btn_justificar">Justificar</string>
+    <string name="n_o_quer_confirmar_toque_aqui">
+        Não quer confirmar? <strong style="color: #002FFF">Toque aqui</strong>
+    </string>
+    <string name="mn_home">Home</string>
+    <string name="mn_justificativa">Justificaviva</string>
+    <string name="mn_reclamacao">Reclamação</string>
+    <string name="mn_dashboard">Dashboard</string>
+    <string name="txt_reclamacao">Registrar Ocorrência</string>
 
 </resources>
