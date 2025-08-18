@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/rounded_top_background"
+        tools:context=".ui.home.BottomSheetReclamacaoFragment">
+
+
+    <TextView
+        android:id="@+id/txt_Link2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/n_o_quer_confirmar_toque_aqui"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_justificar" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_justificar"
+        android:layout_width="354dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="219dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/btn_justificar"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:backgroundTint="@color/blue_primary"
+        app:cornerRadius="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editDescricao" />
+
+    <View
+            android:id="@+id/view"
+            android:layout_width="200dp"
+            android:layout_height="7dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/rounded_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_reclamacao"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="30dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/txt_reclamacao"
+        android:textColor="@color/text_gray"
+        android:textSize="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="22dp"
+        android:layout_height="20dp"
+        app:layout_constraintStart_toStartOf="@+id/txt_reclamacao"
+        app:layout_constraintTop_toBottomOf="@+id/txt_reclamacao"
+        app:srcCompat="@drawable/ic_calendar" />
+
+    <TextView
+        android:id="@+id/txt_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="2dp"
+        android:fontFamily="@font/poppins_regular"
+        android:textColor="@color/text_gray"
+        android:text="10/10"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/txt_reclamacao" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="20dp"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="30dp"
+        app:boxCornerRadiusBottomStart="30dp"
+        app:boxCornerRadiusTopEnd="30dp"
+        app:boxCornerRadiusTopStart="30dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_reclamacao">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:gravity="top"
+            android:hint="E-mail corporativo"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <EditText
+        android:id="@+id/editDescricao"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/edittext_background"
+        android:gravity="top|start"
+        android:hint="Descrição Detalhada do Problema"
+        android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        tools:layout_editor_absoluteX="20dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

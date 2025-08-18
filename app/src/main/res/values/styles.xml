@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CalendarDayHeader">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/light_gray</item>
+    </style>
+
+    <style name="FullScreenBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/FullScreenBottomSheet</item>
+    </style>
+
+    <style name="FullScreenBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomSheetSlow" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/SlowBottomSheetBehavior</item>
+    </style>
+
+    <style name="SlowBottomSheetBehavior" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:windowEnterAnimation">@anim/slide_up_slow</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_slow</item>
+    </style>
+
+</resources>
