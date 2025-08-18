@@ -12,10 +12,10 @@ import com.aula.aion.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Justificativa#newInstance} factory method to
+ * Use the {@link DashboardsFragments#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Justificativa extends Fragment {
+public class DashboardsFragments extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class Justificativa extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Justificativa() {
+    public DashboardsFragments() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class Justificativa extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Justificativa.
+     * @return A new instance of fragment Dashboards.
      */
     // TODO: Rename and change types and number of parameters
-    public static Justificativa newInstance(String param1, String param2) {
-        Justificativa fragment = new Justificativa();
+    public static DashboardsFragments newInstance(String param1, String param2) {
+        DashboardsFragments fragment = new DashboardsFragments();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -61,6 +61,6 @@ public class Justificativa extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_justificativa, container, false);
+        return inflater.inflate(R.layout.fragment_dashboards, container, false);
     }
 }

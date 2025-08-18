@@ -1,13 +1,435 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_activity"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_white"
-    tools:context=".Perfil"
-    android:id="@+id/main">
+    android:layout_height="match_parent">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/glass_background"
+        android:scaleType="centerCrop" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_white"
+        android:id="@+id/activity_perfil"
+        tools:context=".Perfil">
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main">
+
+
+
+                <!-- Avatar e informações -->
+                <ImageView
+                    android:id="@+id/img_fotoPerfil"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="100dp"
+                    android:contentDescription="@string/desc_fotoPerfil"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_usericon"  />
+
+                <TextView
+                    android:id="@+id/txt_cargo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="@string/lbl_cargo"
+                    android:textColor="@color/medium_gray"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toEndOf="@+id/img_fotoPerfil"
+                    app:layout_constraintTop_toTopOf="@+id/img_fotoPerfil" />
+
+                <TextView
+                    android:id="@+id/txt_nome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:text="@string/lbl_nome"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    app:layout_constraintStart_toStartOf="@+id/txt_cargo"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_cargo" />
+
+                <TextView
+                    android:id="@+id/txt_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/lbl_email"
+                    android:textColor="@color/medium_gray"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="@+id/txt_nome"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_nome" />
+
+                <!-- Card Estatísticas -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_editarPerfil"
+                    android:layout_width="153dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="@color/aqua_tertiary"
+                    android:fontFamily="@font/poppins_medium"
+                    android:letterSpacing="0"
+                    android:text="@string/btn_editarPerfil"
+                    android:textAllCaps="false"
+                    android:textSize="12sp"
+                    app:cornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_fotoPerfil"
+                    app:layout_constraintStart_toEndOf="@+id/img_fotoPerfil"
+                    app:layout_constraintStart_toStartOf="@+id/txt_email"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_email"
+                    app:layout_constraintVertical_bias="0.444" />
+
+                <TextView
+                    android:id="@+id/txt_estatistica"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="22dp"
+                    android:text="@string/txt_estatistica"
+                    android:textColor="@color/text_gray"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/poppins_semibold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/img_fotoPerfil" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/crd_Estatisticas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="27dp"
+                    android:layout_marginTop="5dp"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_estatistica">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="57dp"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/txt_meuDesempenho"
+                                android:textColor="@color/text_gray"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/round_backgroud_buttons_perfil"
+                                android:contentDescription="@string/desc_meuDesempenho"
+                                android:padding="12dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/seta" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="330dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#EEEEEE" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="57dp"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/txt_historicoNotificacoes"
+                                android:textColor="@color/text_gray"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/round_backgroud_buttons_perfil"
+                                android:contentDescription="@string/desc_historicoNotificacoes"
+                                android:padding="12dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/seta" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/txt_acessibilidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/txt_assessibilidade"
+                    android:textColor="@color/text_gray"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/poppins_semibold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/crd_Estatisticas" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/crdAssessibilidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="27dp"
+                    android:layout_marginTop="5dp"
+                    app:cardCornerRadius="30dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_acessibilidade">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@string/spr_idioma"
+                                android:src="@drawable/idioma"
+                                app:tint="@color/text_gray" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/txt_idioma"
+                                android:textColor="@color/text_gray"
+                                android:textSize="13sp" />
+
+                            <Spinner
+                                android:id="@+id/spr_idioma"
+                                android:layout_width="207dp"
+                                android:layout_height="wrap_content"
+                                android:entries="@array/my_options_array"
+                                tools:layout_editor_absoluteX="140dp"
+                                tools:layout_editor_absoluteY="670dp" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="330dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#EEEEEE" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="55dp"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@string/desc_notificacoes"
+                                android:src="@drawable/sino"
+                                app:tint="@color/text_gray" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/txt_notificacoes"
+                                android:textColor="@color/text_gray"
+                                android:textSize="13sp" />
+
+                            <com.aula.aion.widgets.CustomSwitch
+                                android:id="@+id/swt_notificacoes"
+                                android:layout_width="55dp"
+                                android:elevation="1dp"
+                                android:layout_height="30dp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="330dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#EEEEEE" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="55dp"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@string/desc_localizacao"
+                                android:src="@drawable/localizacao"
+                                app:tint="@color/text_gray" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/txt_localizacao"
+                                android:textColor="@color/text_gray"
+                                android:textSize="13sp" />
+
+                            <com.aula.aion.widgets.CustomSwitch
+                                android:id="@+id/swt_localizacao"
+                                android:layout_width="55dp"
+                                android:elevation="1dp"
+                                android:layout_height="30dp"/>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="330dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="#EEEEEE" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:gravity="center_vertical"
+                            android:paddingVertical="8dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <ImageView
+                                android:layout_width="15dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@string/desc_notificacoes"
+                                android:src="@drawable/suporte"
+                                app:tint="@color/text_gray" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:fontFamily="@font/poppins_medium"
+                                android:text="@string/txt_suporte"
+                                android:textColor="@color/text_gray"
+                                android:textSize="13sp" />
+
+                            <ImageView
+                                android:layout_width="34dp"
+                                android:layout_height="34dp"
+                                android:background="@drawable/round_backgroud_buttons_perfil"
+                                android:contentDescription="@string/desc_suporte"
+                                android:padding="11dp"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/seta" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:id="@+id/btn_sair"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginHorizontal="27dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rounded_button_background"
+                    android:clickable="true"
+                    android:elevation="2dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="25dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/crdAssessibilidade">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@string/btn_sair"
+                        android:src="@drawable/sair"
+                        app:tint="@color/red" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/btn_sair"
+                        android:textColor="@color/red"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_sair" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    <!-- Include da barra de perfil -->
     <include
         android:id="@+id/perfilNavBar"
         layout="@layout/barra_perfil"
@@ -15,405 +437,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-    <!-- Avatar e informações -->
-
-
-    <!-- Card Estatísticas -->
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="128dp"
-        android:layout_height="131dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="125dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/foto" />
-
-
-    <TextView
-        android:id="@+id/text_cargo"
-        android:layout_width="wrap_content"
-        android:layout_height="15dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/poppins_regular"
-        android:text="@string/lbl_cargo"
-        android:textColor="@color/text_gray"
-        android:textSize="13sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-    <TextView
-        android:id="@+id/text_nome"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"
-        android:layout_marginTop="4dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="@string/lbl_nome"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="@+id/text_cargo"
-        app:layout_constraintTop_toBottomOf="@+id/text_cargo" />
-
-    <TextView
-        android:id="@+id/text_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_medium"
-        android:text="@string/lbl_email"
-        android:textColor="@color/text_gray"
-        android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="@+id/text_nome"
-        app:layout_constraintTop_toBottomOf="@+id/text_nome" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button"
-        android:layout_width="153dp"
-        android:layout_height="50dp"
-        app:cornerRadius="10dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/aqua_tertiary"
-        android:text="@string/btn_editarPerfil"
-        android:textAllCaps="false"
-        android:textSize="12sp"
-        android:fontFamily="@font/poppins_medium"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toBottomOf="@+id/text_email"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="22dp"
-        android:text="@string/lblestatistica"
-        android:textColor="@color/text_gray"
-        android:textSize="15dp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardEstatisticas"
-        android:layout_width="368dp"
-        android:layout_height="126dp"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="7dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <!-- Meu desempenho -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="8dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lblmeudesempenho"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/round_backgroud_buttons_perfil"
-                    android:contentDescription="@string/descbuttommeudesempenho"
-                    android:padding="12dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/seta" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="330dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#EEEEEE" />
-
-            <!-- Meu desempenho -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="8dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lblhistoriconotificacoes"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:background="@drawable/round_backgroud_buttons_perfil"
-                    android:contentDescription="@string/ir"
-                    android:padding="12dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/seta" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/textAcessibilidade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="12dp"
-        android:text="@string/lbl_assessibilidade"
-        android:textColor="@color/text_gray"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardEstatisticas" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardAssessibilidade"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="7dp"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textAcessibilidade">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <!-- Notificações -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="8dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <!-- Ícone de idioma -->
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/desc_idioma"
-                    android:src="@drawable/idioma"
-                    app:tint="@color/text_gray" />
-
-                <!-- Texto "Idioma" -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_idioma"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <Spinner
-                    android:id="@+id/my_spinner"
-                    android:layout_width="207dp"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/my_options_array"
-                    tools:layout_editor_absoluteX="140dp"
-                    tools:layout_editor_absoluteY="670dp" />
-
-                <!-- Spinner de idioma -->
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="330dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#EEEEEE" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="8dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/descnotificacoes"
-                    android:src="@drawable/sino"
-                    app:tint="@color/text_gray" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_notificacoes"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <com.aula.aion.widgets.CustomSwitch
-                    android:id="@+id/customSwitchNotificacoes"
-                    android:layout_width="65dp"
-                    android:layout_height="37dp"
-                    android:layout_gravity="center_vertical"
-                    android:padding="1dp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="330dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#EEEEEE" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="8dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/descnotificacoes"
-                    android:src="@drawable/localizacao"
-                    app:tint="@color/text_gray" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_localizacao"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <com.aula.aion.widgets.CustomSwitch
-                    android:id="@+id/customSwitch"
-                    android:layout_width="65dp"
-                    android:layout_height="37dp"
-                    android:layout_gravity="center_vertical"
-                    android:padding="1dp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="330dp"
-                android:layout_height="1dp"
-                android:layout_gravity="center"
-                android:background="#EEEEEE" />
-
-            <!-- Meu desempenho -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingVertical="8dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:contentDescription="@string/descnotificacoes"
-                    android:src="@drawable/suporte"
-                    app:tint="@color/text_gray" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/lbl_suporte"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <ImageView
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:background="@drawable/round_backgroud_buttons_perfil"
-                    android:contentDescription="@string/ir"
-                    android:padding="11dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/seta" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <LinearLayout
-        android:id="@+id/btn_sair"
-        android:layout_width="368dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_button_background"
-        android:clickable="true"
-        android:elevation="2dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="25dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardAssessibilidade">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:contentDescription="@string/descnotificacoes"
-            android:src="@drawable/sair"
-            app:tint="@color/red" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/poppins_medium"
-            android:text="@string/btn_sair"
-            android:textColor="@color/red"
-            android:textSize="15sp" />
-
-
-    </LinearLayout>
-
-
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

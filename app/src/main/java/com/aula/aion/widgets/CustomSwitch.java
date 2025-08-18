@@ -25,7 +25,7 @@ public class CustomSwitch extends FrameLayout {
     // Constantes para o padding do thumb dentro do track (ajuste conforme seu design)
     private static final int THUMB_HORIZONTAL_PADDING_DP = 8; // Espaçamento do thumb para as bordas do track
     private static final int OFF_STATE_EXTRA_OFFSET_DP = -8; // Aumento extra para o trilho quando desligado
-    private static final int ON_STATE_EXTRA_OFFSET_DP = -4; // Aumento extra para o trilho quando desligado
+    private static final int ON_STATE_EXTRA_OFFSET_DP = -5; // Aumento extra para o trilho quando desligado
     public CustomSwitch(Context context) {
         super(context);
         init(context);
