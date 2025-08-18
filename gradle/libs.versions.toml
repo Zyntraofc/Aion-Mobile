@@ -1,5 +1,7 @@
 [versions]
 agp = "8.10.1"
+blurview = "3.1.0"
+blurviewVersion = "version-2.0.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -13,6 +15,9 @@ navigationUi = "2.9.0"
 activity = "1.10.1"
 
 [libraries]
+blurview = { module = "com.github.Dimezis:BlurView", version.ref = "blurview" }
+blurview-vversion310 = { module = "com.github.Dimezis:BlurView", version.ref = "blurviewVersion" }
+firebase-auth = { module = "com.google.firebase:firebase-auth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
