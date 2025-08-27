@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_top_background"
+    android:paddingBottom="20dp">
+
+    <TextView
+        android:id="@+id/txt_nm_remetente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Aion"
+        android:textColor="@color/black"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fnd_ic_remetente"
+        app:layout_constraintStart_toEndOf="@+id/fnd_ic_remetente"
+        app:layout_constraintTop_toTopOf="@+id/fnd_ic_remetente"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/txt_conteudo_completo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fnd_ic_remetente" />
+
+    <View
+        android:id="@+id/view5"
+        android:layout_width="200dp"
+        android:layout_height="7dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/fnd_ic_remetente"
+        android:layout_width="55dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_notification_aion" />
+
+    <ImageView
+        android:id="@+id/ic_img_remetente"
+        android:layout_width="23dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fnd_ic_remetente"
+        app:layout_constraintEnd_toEndOf="@+id/fnd_ic_remetente"
+        app:layout_constraintStart_toStartOf="@+id/fnd_ic_remetente"
+        app:layout_constraintTop_toTopOf="@+id/fnd_ic_remetente"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/txt_tempo2"
+        android:layout_width="24dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="8dp"
+        android:text="1h"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toEndOf="@+id/txt_nm_remetente"
+        app:layout_constraintTop_toTopOf="@+id/txt_nm_remetente" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/background_notificacao"
+        app:circularflow_radiusInDP="@android:string/autofill"
+        app:layout_constraintEnd_toEndOf="@+id/txt_tempo2"
+        app:layout_constraintTop_toBottomOf="@+id/txt_tempo2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

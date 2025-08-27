@@ -16,9 +16,8 @@
     <string name="lbl_codigoEmpresa">Código da Empresa</string>
     <string name="hint_codigoEmpresa">Código da sua empresa</string>
     <string name="txt_email">Email</string>
-    <string name="hint_email">exemplo@gmail.com</string>
-    <string name="txt_senha">Senha</string>
-    <string name="hint_senha">Sua senha aqui</string>
+    <string name="hint_email">E-mail corporativo</string>
+    <string name="hint_senha">Senha</string>
     <string name="rbtn_lembreDeMim">Lembre de mim</string>
     <string name="txt_esqueceuSenha">
         <u>

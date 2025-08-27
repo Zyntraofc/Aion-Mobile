@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="55dp"
+        android:layout_height="59dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_notification_aion" />
+
+    <ImageView
+        android:id="@+id/ic_remetente"
+        android:layout_width="23dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+        app:layout_constraintEnd_toEndOf="@+id/imageView6"
+        app:layout_constraintStart_toStartOf="@+id/imageView6"
+        app:layout_constraintTop_toTopOf="@+id/imageView6"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/txt_remetente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Aion"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/imageView6"
+        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+
+    <TextView
+        android:id="@+id/txt_conteudo"
+        android:layout_width="232dp"
+        android:layout_height="22dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Seja bem-vindo ao Aion, sua nova ferramenta de ponto. Qualquer dúvida entre em contato com seu RH responsável."
+        app:layout_constraintStart_toStartOf="@+id/txt_remetente"
+        app:layout_constraintTop_toBottomOf="@+id/txt_remetente" />
+
+    <TextView
+        android:id="@+id/txt_tempo"
+        android:layout_width="24dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="1h"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toEndOf="@+id/txt_conteudo"
+        app:layout_constraintTop_toTopOf="@+id/txt_remetente" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/background_notificacao"
+        app:circularflow_radiusInDP="@android:string/autofill"
+        app:layout_constraintStart_toStartOf="@+id/txt_tempo"
+        app:layout_constraintTop_toBottomOf="@+id/txt_tempo"/>
+
+    <View
+        android:id="@+id/vw_visisao"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@color/lighter_gray"
+        app:circularflow_radiusInDP="@android:string/autofill"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+</androidx.constraintlayout.widget.ConstraintLayout>
