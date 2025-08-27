@@ -2,8 +2,14 @@ package com.aula.aion;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,8 +66,17 @@ public class Inicio extends AppCompatActivity {
         }
 
         binding.flbBatida.setOnClickListener(view -> {
-            BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
-            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+//            BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
+//            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.bottom_sheet_batida);
+            dialog.show();
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+            dialog.getWindow().setGravity(Gravity.BOTTOM);
         });
 
         binding.aionNavBar.profileButton.setOnClickListener(view -> {
@@ -71,6 +86,19 @@ public class Inicio extends AppCompatActivity {
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
                             Intent intent = new Intent(Inicio.this, Perfil.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
+                        }
+                    })
+                    .start();
+        });
+        binding.aionNavBar.btnNotificacao.setOnClickListener(view -> {
+            binding.aionNavBar.btnNotificacao.animate()
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationStart(animation);
+                            Intent intent = new Intent(Inicio.this, NotificacaoActivity.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
                         }
