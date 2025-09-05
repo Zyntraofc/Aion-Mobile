@@ -20,9 +20,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import androidx.core.content.ContextCompat;
 import android.text.style.ForegroundColorSpan;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
 
     private BottomSheetBatidaBinding binding;
+    private String nomeFuncionario;
 
     public static BottomSheetBatidaFragment newInstance() {
         BottomSheetBatidaFragment fragment = new BottomSheetBatidaFragment();
@@ -42,17 +46,23 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.FullScreenBottomSheetDialog);
+        if (getArguments() != null) {
+            nomeFuncionario = getArguments().getString("nome");
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        binding.txtHoraAtual.setText(mostrarHoraAtualFormatada());
         // Recuperar os argumentos passados
         Bundle args = getArguments();
         if (args != null) {
             String data = args.getString("data", "Dia 06/06");
             binding.txtData.setText(data);
+        }
+        if (nomeFuncionario != null) {
+            binding.txtNome.setText("Olá, " + nomeFuncionario.split(" ")[0]);
         }
 
         // Configurar o BottomSheetBehavior para expandir totalmente
@@ -100,5 +110,11 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    private String mostrarHoraAtualFormatada(){
+        LocalTime agora = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H'h'mm");
+        String horaFormatada = agora.format(formatter);
+        return horaFormatada;
     }
 }
