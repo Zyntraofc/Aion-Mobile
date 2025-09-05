@@ -1,16 +1,18 @@
-    package com.aula.aion;
+package com.aula.aion;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.view.Window;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.navigation.NavController; // Importação necessária
 import androidx.navigation.fragment.NavHostFragment; // Importação necessária
 import androidx.navigation.ui.AppBarConfiguration; // Importação necessária
 import androidx.navigation.ui.NavigationUI; // Importação necessária
