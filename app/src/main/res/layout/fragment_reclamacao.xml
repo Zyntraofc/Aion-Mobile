@@ -8,7 +8,7 @@
 
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtBemVindo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -45,7 +45,7 @@
         app:layout_constraintBottom_toTopOf="@+id/reclamacaoRecyclerView"
         app:layout_constraintEnd_toEndOf="@+id/reclamacaoRecyclerView"
         app:layout_constraintHorizontal_bias="0.187"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/txtBemVindo"
         app:layout_constraintTop_toTopOf="parent" />
 
 
