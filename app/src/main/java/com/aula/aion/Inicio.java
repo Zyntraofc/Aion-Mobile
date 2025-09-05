@@ -20,20 +20,26 @@ import androidx.navigation.NavController; // Importação necessária
 import androidx.navigation.fragment.NavHostFragment; // Importação necessária
 import androidx.navigation.ui.AppBarConfiguration; // Importação necessária
 import androidx.navigation.ui.NavigationUI; // Importação necessária
-
 import com.aula.aion.databinding.ActivityInicioBinding;
 import com.aula.aion.ui.home.BottomSheetBatidaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView; // Importação necessária
-
 public class Inicio extends AppCompatActivity {
 
-    ActivityInicioBinding binding;
+       private Funcionario funcionario;
 
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public Funcionario getFuncionario() {
+        return funcionario;
+    }
+
+    ActivityInicioBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
         binding = ActivityInicioBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
@@ -41,15 +47,12 @@ public class Inicio extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         BottomNavigationView navView = binding.navView; // Usa o ID 'nav_view' do XML corrigido
-
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = null;
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
         }
-
         if (navController != null) {
             // IDs dos seus fragmentos de topo no mobile_navigation.xml
             // Adapte conforme os IDs reais do seu 'nav_menu.xml'
@@ -60,14 +63,14 @@ public class Inicio extends AppCompatActivity {
                     R.id.nav_reclamacao,
                     R.id.nav_dashboard)
                     .build();
-
             // Conecta a BottomNavigationView ao NavController
             NavigationUI.setupWithNavController(navView, navController);
         }
 
         binding.flbBatida.setOnClickListener(view -> {
-//            BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
-//            bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+            Bundle args = new Bundle();
+            args.putString("nome", funcionario.getNomeCompleto());
+            bottomSheet.setArguments(args);
 
             final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -86,6 +89,8 @@ public class Inicio extends AppCompatActivity {
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
                             Intent intent = new Intent(Inicio.this, Perfil.class);
+                            intent.putExtra("funcionario", funcionario);
+
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
                         }
