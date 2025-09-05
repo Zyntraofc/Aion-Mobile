@@ -16,10 +16,21 @@ import androidx.navigation.ui.AppBarConfiguration; // Importação necessária
 import androidx.navigation.ui.NavigationUI; // Importação necessária
 
 import com.aula.aion.databinding.ActivityInicioBinding;
+import com.aula.aion.model.Funcionario;
 import com.aula.aion.ui.home.BottomSheetBatidaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView; // Importação necessária
 
 public class Inicio extends AppCompatActivity {
+
+    private Funcionario funcionario;
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
+    }
+
+    public Funcionario getFuncionario() {
+        return funcionario;
+    }
 
     ActivityInicioBinding binding;
 
@@ -61,6 +72,9 @@ public class Inicio extends AppCompatActivity {
 
         binding.flbBatida.setOnClickListener(view -> {
             BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
+            Bundle args = new Bundle();
+            args.putString("nome", funcionario.getNomeCompleto());
+            bottomSheet.setArguments(args);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
         });
 
@@ -70,7 +84,11 @@ public class Inicio extends AppCompatActivity {
                         @Override
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
+
                             Intent intent = new Intent(Inicio.this, Perfil.class);
+
+                            intent.putExtra("funcionario", funcionario);
+
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
                         }

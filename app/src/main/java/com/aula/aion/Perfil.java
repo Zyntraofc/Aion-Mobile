@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build; // Import necessário
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup; // Import necessário
 import android.widget.AdapterView;
@@ -16,15 +17,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.ActivityPerfilBinding;
+import com.aula.aion.model.Cargo;
+import com.aula.aion.model.Funcionario;
+import com.aula.aion.ui.home.HomeFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 // Imports para a lógica de Blur Híbrida
 import eightbitlab.com.blurview.BlurAlgorithm;
 import eightbitlab.com.blurview.RenderEffectBlur;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Perfil extends AppCompatActivity {
+
+    private Retrofit retrofit;
 
     private ActivityPerfilBinding binding; // Boa prática: tornar o binding privado
 
@@ -45,11 +60,66 @@ public class Perfil extends AppCompatActivity {
             return insets;
         });
 
+        Funcionario funcionario = (Funcionario) getIntent().getSerializableExtra("funcionario");
+        Log.d("Perfil", "Funcionario recebido: " + funcionario.getNomeCompleto());
+        if (funcionario != null) {
+            setarInformacoesFuncionario(funcionario);
+        }
+
+
         // Configurar o efeito de desfoque
         setupBlurView();
 
         // Configurar listeners de clique e outros componentes
         setupListeners();
+    }
+
+    private void setarInformacoesFuncionario(Funcionario funcionario) {
+        binding.txtNome.setText(funcionario.getNomeCompleto());
+        binding.txtEmail.setText(funcionario.getEmail());
+        chamaAPI_GetCargoById(funcionario.getCdCargo());
+    }
+    private void chamaAPI_GetCargoById(Long id) {
+        Log.d("chamaAPI_GetByEmail", "Chamando API com id: " + id);
+        // Credenciais da API
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    String credentials = Credentials.basic("admin", "123456");
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", credentials)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+        //Definir a URL da API
+        String url = "https://ms-aion-jpa.onrender.com";
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
+
+        serviceAPI_SQL.selecionarCargoPorId(id).enqueue(new Callback<Cargo>() {
+            @Override
+            public void onResponse(Call<Cargo> call, Response<Cargo> response) {
+                if (response.isSuccessful()) {
+                    Log.d("chamaAPI_GetByEmail", "Resposta da API: " + response);
+                    Cargo cargo = response.body();
+                    if (cargo != null) {
+                        Log.d("chamaAPI_GetByEmail", "Cargo: " + cargo.getNome());
+                        binding.txtCargo.setText(cargo.getNome());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Cargo> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("chamaAPI_GetByEmail", "Erro na chamada da API: " + t.getMessage());
+            }
+        });
     }
 
     /**

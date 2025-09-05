@@ -1,5 +1,7 @@
 package com.aula.aion.ui.home;// HomeFragment.java (Exemplo do seu fragmento inicial com a lógica do calendário)
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.aion.Inicio;
 import com.aula.aion.R;
 import com.aula.aion.adapter.CalendarAdapter;
+import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.model.CalendarDay;
+import com.aula.aion.model.Funcionario;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,8 +27,18 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class HomeFragment extends Fragment {
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+public class HomeFragment extends Fragment {
+    private Retrofit retrofit;
+    private FirebaseAuth mAuth;
     // Componentes do calendário
     private TextView monthYearTextView;
     private RecyclerView calendarRecyclerView;
@@ -43,6 +59,11 @@ public class HomeFragment extends Fragment {
         // tvWelcome.setText("Olá!");
         // Ex: Button btnAction = view.findViewById(R.id.btnAction);
         // btnAction.setOnClickListener(...)
+        mAuth = FirebaseAuth.getInstance();
+        String email = mAuth.getCurrentUser().getEmail();
+        chamaAPI_GetByEmail(email, view);
+
+
 
         monthYearTextView = view.findViewById(R.id.monthYearTextView);
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
@@ -134,5 +155,51 @@ public class HomeFragment extends Fragment {
         calendarAdapter = new CalendarAdapter(getContext(), days);
         calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         calendarRecyclerView.setAdapter(calendarAdapter);
+    }
+    private void chamaAPI_GetByEmail(String email, View view) {
+        Log.d("chamaAPI_GetByEmail", "Chamando API com email: " + email);
+        // Credenciais da API
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    String credentials = Credentials.basic("admin", "123456");
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", credentials)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+        //Definir a URL da API
+        String url = "https://ms-aion-jpa.onrender.com";
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
+
+        serviceAPI_SQL.selecionarFuncionarioPorEmail(email).enqueue(new Callback<Funcionario>() {
+            @Override
+            public void onResponse(Call<Funcionario> call, Response<Funcionario> response) {
+                if (response.isSuccessful()) {
+                    Log.d("chamaAPI_GetByEmail", "Resposta da API: " + response);
+                    Funcionario funcionarioRetorno = response.body();
+                    if (funcionarioRetorno != null) {
+                        TextView txtBemVindo = view.findViewById(R.id.txtBemVindo);
+                        txtBemVindo.setText("Olá, " + funcionarioRetorno.getNomeCompleto());
+                        Inicio activity = (Inicio) getActivity();
+                        if (activity != null) {
+                            activity.setFuncionario(funcionarioRetorno);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Funcionario> call, Throwable t) {
+                t.printStackTrace();
+                Log.d("chamaAPI_GetByEmail", "Erro na chamada da API: " + t.getMessage());
+            }
+        });
     }
 }
