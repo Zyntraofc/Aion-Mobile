@@ -50,12 +50,12 @@
     <string name="txt_localizacao">Ativar Localização</string>
     <string name="spr_idioma">Selecionar Idioma</string>
     <string name="txt_idioma">Idioma</string>
-    <string name="txt_assessibilidade">Assessibilidade</string>
+    <string name="txt_acessibilidade">Acessibilidade</string>
     <string name="str_txt_perfil">Perfil</string>
     <string name="desc_voltar">TODO</string>
-    <string name="lbl_cargo">Analista de Dados</string>
-    <string name="lbl_nome">Jefferson Custodio</string>
-    <string name="lbl_email">jefferson.lopes@jbs.com.br</string>
+    <string name="lbl_cargo">...</string>
+    <string name="lbl_nome">...</string>
+    <string name="lbl_email">...</string>
     <string name="btn_editarPerfil">Editar Perfil</string>
     <string name="btn_sair">Sair</string>
     <string name="abrDomingo">D</string>
