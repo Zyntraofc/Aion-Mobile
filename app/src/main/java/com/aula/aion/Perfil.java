@@ -37,7 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Perfil extends AppCompatActivity {
+ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCallback  {
 
     private Retrofit retrofit;
 
@@ -190,5 +190,15 @@ public class Perfil extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.stay_still, R.anim.slide_out_right);
+    }
+    @Override
+    public void onLogoutDecision(boolean logout) {
+        if (logout) {
+            finish();
+            Intent intent = new Intent(Perfil.this, Login.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
+        }
+        // Caso logout seja false (cancelar), não faz nada
     }
 }

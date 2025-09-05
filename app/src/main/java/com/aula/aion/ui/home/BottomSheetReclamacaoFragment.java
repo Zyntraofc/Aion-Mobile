@@ -28,7 +28,7 @@ public class BottomSheetReclamacaoFragment extends BottomSheetDialogFragment  {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.BottomSheetSlow);
+        setStyle(STYLE_NORMAL, R.style.FullScreenBottomSheetDialog);
     }
 
     @Nullable
