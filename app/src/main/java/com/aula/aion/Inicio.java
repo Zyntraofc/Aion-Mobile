@@ -1,4 +1,4 @@
-package com.aula.aion;
+    package com.aula.aion;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -76,6 +76,15 @@ public class Inicio extends AppCompatActivity {
             args.putString("nome", funcionario.getNomeCompleto());
             bottomSheet.setArguments(args);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+            // Dialog pop up 
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.bottom_sheet_batida);
+            dialog.show();
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+            dialog.getWindow().setGravity(Gravity.BOTTOM);
         });
 
         binding.aionNavBar.profileButton.setOnClickListener(view -> {
@@ -89,6 +98,20 @@ public class Inicio extends AppCompatActivity {
 
                             intent.putExtra("funcionario", funcionario);
 
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
+                        }
+                    })
+                    .start();
+        });
+    }
+    binding.aionNavBar.btnNotificacao.setOnClickListener(view -> {
+            binding.aionNavBar.btnNotificacao.animate()
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationStart(animation);
+                            Intent intent = new Intent(Inicio.this, NotificacaoActivity.class);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
                         }
