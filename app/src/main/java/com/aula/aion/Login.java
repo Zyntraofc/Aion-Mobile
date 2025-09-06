@@ -23,31 +23,27 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 public class Login extends AppCompatActivity {
     private ActivityLoginBinding binding;
-    private boolean isPasswordVisible = false;
-
+    private boolean isPasswordVisible = false;    +
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        // Infla o layout usando View Binding e define como conteúdo
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        // Ajusta os insets da janela
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
+        setContentView(R.layout.activity_login);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        // Botão Entrar
         binding.btnEntrar.setOnClickListener(v -> {
-            String email = binding.inputEmail.getText().toString().trim();
-            String senha = binding.inputSenha.getText().toString().trim();
-            if (email.isEmpty() || senha.isEmpty()) {
+            String email = binding.inputEmail.getText().toString();
+            String senha = binding.inputSenha.getText().toString();
+            if ("".equals(email) || email.isEmpty() || "".equals(senha) || senha.isEmpty()) {
                 binding.txtErroLogin.setText("Preencha todos os campos");
-            } else {
+            }
+            else {
                 AutenticarUsuario(email, senha);
             }
         });
@@ -93,38 +89,34 @@ public class Login extends AppCompatActivity {
 
             }
         });
-    }
 
+    }
     private void AutenticarUsuario(String email, String senha) {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Intent intent = new Intent(Login.this, Inicio.class);
+                        Intent intent = new Intent(this, Inicio.class);
                         startActivity(intent);
                         finish();
                     } else {
                         String erro = "";
                         try {
                             throw task.getException();
-                        } catch (FirebaseAuthInvalidUserException e) {
+                        } catch (FirebaseAuthInvalidUserException e)
+                        {
                             erro = "E-mail não está cadastrado";
                             Log.e("LoginActivity", erro, e);
-                        } catch (FirebaseAuthInvalidCredentialsException e) {
+                        }
+                        catch (FirebaseAuthInvalidCredentialsException e)
+                        {
                             erro = "E-mail ou senha inválidos";
                             Log.e("LoginActivity", erro, e);
-                        } catch (Exception e) {
-                            Log.e("LoginActivity", "EXCEPTION", e);
+                        }catch (Exception e){
+                            Log.e("LoginActivity","EXCEPTION", e);
                         }
                         binding.txtErroLogin.setText(erro);
-                        binding.txtErroLogin.setVisibility(View.VISIBLE);
+                        binding.txtErroLogin.setVisibility(binding.txtErroLogin.VISIBLE);
                     }
                 });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Limpa a referência do binding para evitar memory leaks
-        binding = null;
     }
 }

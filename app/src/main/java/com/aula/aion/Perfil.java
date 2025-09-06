@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build; // Import necessário
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup;
+import android.view.ViewGroup; // Import necessário
 import android.widget.AdapterView;
 import android.widget.Toast;
 
@@ -25,7 +23,6 @@ import com.aula.aion.model.Cargo;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.ui.home.HomeFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.aula.aion.ui.home.BottomSheetSairFragment;
 
 // Imports para a lógica de Blur Híbrida
 import eightbitlab.com.blurview.BlurAlgorithm;
@@ -40,10 +37,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCallback { 
+ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCallback  {
 
     private Retrofit retrofit;
-    private ActivityPerfilBinding binding;
+
+    private ActivityPerfilBinding binding; // Boa prática: tornar o binding privado
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,8 +129,6 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
     private void setupBlurView() {
         float blurRadius = 11f; // Raio do desfoque. Ajuste entre 16f e 25f para o efeito desejado.
         int overlayColor = Color.parseColor("#86F6F6F6"); // Cor de sobreposição (branco com 25% de opacidade).
-        float blurRadius = 11f;
-        int overlayColor = Color.parseColor("#86F6F6F6");
 
         // O rootView é o container que a BlurView irá "observar" para criar o desfoque.
         // Usar o 'android.R.id.content' garante que ele capture tudo na tela.
@@ -152,12 +148,9 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
         binding.perfilNavBar.blurView
                 .setupWith(rootView, blurAlgorithm)
                 .setFrameClearDrawable(windowBackground) // Evita artefatos visuais.
-                .setFrameClearDrawable(windowBackground)
                 .setBlurRadius(blurRadius)
                 .setOverlayColor(overlayColor) // Aplica a cor de "vidro fosco".
                 .setBlurAutoUpdate(true);// Atualiza o desfoque automaticamente.
-                .setOverlayColor(overlayColor)
-                .setBlurAutoUpdate(true);
     }
 
     /**
@@ -169,9 +162,6 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
             Intent intent = new Intent(Perfil.this, Login.class);
             startActivity(intent);
             finish();
-            BottomSheetSairFragment bottomSheet = BottomSheetSairFragment.newInstance(); // Usa o método factory
-            bottomSheet.setLogoutCallback(this); // Passa o callback
-            bottomSheet.show(getSupportFragmentManager(), "BottomSheetSair"); // Tag explícita
         });
 
         binding.sprIdioma.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -191,17 +181,16 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
             }
         });
 
-         binding.perfilNavBar.btnVoltar.setOnClickListener(view -> {
+        binding.perfilNavBar.btnVoltar.setOnClickListener(view -> {
             finish();
         });
+    }
 
     @Override
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.stay_still, R.anim.slide_out_right);
     }
-}
-
     @Override
     public void onLogoutDecision(boolean logout) {
         if (logout) {

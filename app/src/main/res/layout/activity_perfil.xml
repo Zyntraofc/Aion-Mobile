@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/root_activity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ImageView
         android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 <!-- Avatar e informações -->
                 <ImageView
                     android:id="@+id/img_fotoPerfil"
-                    android:layout_width="118dp"
+                    android:layout_width="128dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="100dp"
@@ -84,7 +84,7 @@
                 <!-- Card Estatísticas -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_editarPerfil"
-                    android:layout_width="150dp"
+                    android:layout_width="153dp"
                     android:layout_height="45dp"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/aqua_tertiary"
@@ -120,7 +120,7 @@
                     android:layout_marginHorizontal="27dp"
                     android:layout_marginTop="5dp"
                     app:cardCornerRadius="30dp"
-                    android:elevation="0dp"
+                    app:cardElevation="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_estatistica">
@@ -200,8 +200,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="12dp"
-                    android:text="@string/txt_assessibilidade"
-
+                    android:text="@string/txt_acessibilidade"
                     android:textColor="@color/text_gray"
                     android:textSize="15sp"
                     android:fontFamily="@font/poppins_semibold"
@@ -215,7 +214,7 @@
                     android:layout_marginHorizontal="27dp"
                     android:layout_marginTop="5dp"
                     app:cardCornerRadius="30dp"
-                    android:elevation="0dp"
+                    app:cardElevation="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_acessibilidade">
@@ -389,8 +388,9 @@
                     android:layout_height="60dp"
                     android:layout_marginHorizontal="27dp"
                     android:layout_marginTop="20dp"
-                    android:background="@drawable/rounded_button"
+                    android:background="@drawable/rounded_button_background"
                     android:clickable="true"
+                    android:elevation="2dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="25dp"
