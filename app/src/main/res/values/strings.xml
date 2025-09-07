@@ -52,6 +52,7 @@
     <string name="txt_idioma">Idioma</string>
     <string name="txt_acessibilidade">Acessibilidade</string>
     <string name="str_txt_perfil">Perfil</string>
+    <string name="str_txt_editar_perfil">Editar Perfil</string>
     <string name="desc_voltar">TODO</string>
     <string name="lbl_cargo">...</string>
     <string name="lbl_nome">...</string>
@@ -92,5 +93,16 @@
     <string name="mn_reclamacao">Reclamação</string>
     <string name="mn_dashboard">Dashboard</string>
     <string name="txt_reclamacao">Registrar Ocorrência</string>
+
+
+
+    <string-array name="estado_civil_array">
+        <item>Solteiro(a)</item>
+        <item>Casado(a)</item>
+        <item>Divorciado(a)</item>
+        <item>Viúvo(a)</item>
+    </string-array>
+
+    <string name="estado_civil_prompt">Selecione o estado civil</string>
 
 </resources>
