@@ -75,7 +75,7 @@
         android:layout_height="1dp"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="15dp"
-        android:background="@color/lighter_gray"
+        android:background="@color/light_gray"
         app:circularflow_radiusInDP="@android:string/autofill"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
