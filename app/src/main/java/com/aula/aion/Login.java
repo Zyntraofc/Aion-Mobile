@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 public class Login extends AppCompatActivity {
     private ActivityLoginBinding binding;
-    private boolean isPasswordVisible = false;    +
+    private boolean isPasswordVisible = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
