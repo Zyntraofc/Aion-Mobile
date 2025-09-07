@@ -1,5 +1,6 @@
 package com.aula.aion.api;
 
+import com.aula.aion.model.ApiCep;
 import com.aula.aion.model.Cargo;
 import com.aula.aion.model.Funcionario;
 
@@ -15,4 +16,6 @@ public interface ServiceAPI_SQL {
     @GET("/api/cargo/selecionar/{id}")
     Call<Cargo> selecionarCargoPorId(@Path("id") Long id);
 
+    @GET("/ws/{cep}/json/")
+    Call<ApiCep> buscarCep(@Path("cep") String cep);
 }
