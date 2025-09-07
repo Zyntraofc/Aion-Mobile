@@ -96,7 +96,7 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
             if (window != null) {
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                window.setWindowAnimations(R.style.DialogAnimation);
+//                window.setWindowAnimations(R.style.DialogAnimation);
                 WindowManager.LayoutParams params = window.getAttributes();
                 params.gravity = Gravity.BOTTOM;
                 window.setAttributes(params);
