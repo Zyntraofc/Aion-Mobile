@@ -35,11 +35,13 @@ public class Funcionario implements Serializable {
 
     private Long cdCargo;
 
+    private Long cdEndereco;
+
     public Funcionario() {}
 
     public Funcionario(Long cdMatricula, String nomeCompleto, String cpf, String rg, String nascimento,
             String estadoCivil, String admissao, Long cdGestor, Integer dependentes, String email,
-            String hashSenha, String telefone, String sexo, Long cdDepartamento, Long cdCargo) {
+            String hashSenha, String telefone, String sexo, Long cdDepartamento, Long cdCargo, Long cdEndereco) {
         this.cdMatricula = cdMatricula;
         this.nomeCompleto = nomeCompleto;
         this.cpf = cpf;
@@ -55,6 +57,7 @@ public class Funcionario implements Serializable {
         this.sexo = sexo;
         this.cdDepartamento = cdDepartamento;
         this.cdCargo = cdCargo;
+        this.cdEndereco = cdEndereco;
     }
 
     public Long getCdMatricula() {
@@ -175,5 +178,13 @@ public class Funcionario implements Serializable {
 
     public void setNascimento(String nascimento) {
         this.nascimento = nascimento;
+    }
+
+    public Long getCdEndereco() {
+        return cdEndereco;
+    }
+
+    public void setCdEndereco(Long cdEndereco) {
+        this.cdEndereco = cdEndereco;
     }
 }

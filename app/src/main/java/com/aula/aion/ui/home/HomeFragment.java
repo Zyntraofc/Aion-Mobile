@@ -187,6 +187,7 @@ public class HomeFragment extends Fragment {
                     if (funcionarioRetorno != null) {
                         TextView txtBemVindo = view.findViewById(R.id.txtBemVindo);
                         txtBemVindo.setText("Olá, " + funcionarioRetorno.getNomeCompleto());
+                        Log.d("VER DATA", funcionarioRetorno.getNascimento());
                         Inicio activity = (Inicio) getActivity();
                         if (activity != null) {
                             activity.setFuncionario(funcionarioRetorno);

@@ -61,10 +61,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
         });
 
         Funcionario funcionario = (Funcionario) getIntent().getSerializableExtra("funcionario");
-        Log.d("Perfil", "Funcionario recebido: " + funcionario.getNomeCompleto());
+        Log.d("Ver data em perfil", funcionario.getNascimento());
         if (funcionario != null) {
             setarInformacoesFuncionario(funcionario);
         }
+
+        binding.btnEditarPerfil.setOnClickListener(view -> {
+            Intent intent = new Intent(Perfil.this, EditarPerfil.class);
+            intent.putExtra("funcionario", funcionario);
+            startActivity(intent);
+        });
 
 
         // Configurar o efeito de desfoque
