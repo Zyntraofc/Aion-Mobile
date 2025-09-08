@@ -60,10 +60,8 @@ public class EditarPerfil extends AppCompatActivity {
 
         View navBar = findViewById(R.id.editarPerfilNavBar);
 
-        ImageView btnSalvar = navBar.findViewById(R.id.btn_voltar);
-        btnSalvar.setOnClickListener(v ->{
-            Intent intent = new Intent(EditarPerfil.this, Perfil.class);
-            startActivity(intent);
+        ImageView btnVoltar = navBar.findViewById(R.id.btn_voltar);
+        btnVoltar.setOnClickListener(v ->{
             finish();
         });
 
