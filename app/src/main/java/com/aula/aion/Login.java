@@ -53,43 +53,6 @@ public class Login extends AppCompatActivity {
             BottomSheetRedefinirSenhaFragment bottomSheet = new BottomSheetRedefinirSenhaFragment();
             bottomSheet.show(getSupportFragmentManager(), "bottomSheet");
         });
-
-        // Lógica do "olhinho" para mostrar/esconder senha
-        binding.inputSenha.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (binding.inputSenha.getCompoundDrawables()[2] != null && event.getRawX() >= (binding.inputSenha.getRight() - binding.inputSenha.getCompoundDrawables()[2].getBounds().width()))
-                    {
-                        isPasswordVisible = !isPasswordVisible;
-
-                        if (isPasswordVisible) {
-                            // Mostrar senha
-                            binding.inputSenha.setInputType(InputType.TYPE_CLASS_TEXT |
-                                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                            Drawable eyeOffDrawable = ContextCompat.getDrawable(Login.this, R.drawable.ic_eye_off);
-                            if (eyeOffDrawable != null) {
-                                binding.inputSenha.setCompoundDrawablesWithIntrinsicBounds(null, null, eyeOffDrawable, null);
-                            }
-                        } else {
-                            // Esconder senha
-                            binding.inputSenha.setInputType(InputType.TYPE_CLASS_TEXT |
-                                    InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                            Drawable eyeDrawable = ContextCompat.getDrawable(Login.this, R.drawable.ic_eye);
-                            if (eyeDrawable != null) {
-                                binding.inputSenha.setCompoundDrawablesWithIntrinsicBounds(null, null, eyeDrawable, null);
-                            }
-                        }
-                        binding.inputSenha.setSelection(binding.inputSenha.getText().length());
-                        v.performClick();
-                        return true;
-                    }
-                }
-                return false;
-
-            }
-        });
-
     }
     private void AutenticarUsuario(String email, String senha) {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)

@@ -78,7 +78,7 @@ public class Inicio extends AppCompatActivity {
         binding.flbBatida.setOnClickListener(view -> {
             BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
             Bundle args = new Bundle();
-            args.putString("nome", funcionario.getNomeCompleto());
+            args.putSerializable("funcionario", funcionario);
             bottomSheet.setArguments(args);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
 
@@ -110,18 +110,18 @@ public class Inicio extends AppCompatActivity {
         });
 
         // Botão notificações
-//        binding.aionNavBar.btnNotificacao.setOnClickListener(view -> {
-//            binding.aionNavBar.btnNotificacao.animate()
-//                    .setListener(new AnimatorListenerAdapter() {
-//                        @Override
-//                        public void onAnimationStart(Animator animation) {
-//                            super.onAnimationStart(animation);
-//                            Intent intent = new Intent(Inicio.this, NotificacaoActivity.class);
-//                            startActivity(intent);
-//                            overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
-//                        }
-//                    })
-//                    .start();
-//        });
+        binding.aionNavBar.notificacao.setOnClickListener(view -> {
+            binding.aionNavBar.notificacao.animate()
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationStart(animation);
+                            Intent intent = new Intent(Inicio.this, NotificacaoActivity.class);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
+                        }
+                    })
+                    .start();
+        });
     }
 }
