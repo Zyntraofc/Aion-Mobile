@@ -101,6 +101,7 @@
         <item>Casado(a)</item>
         <item>Divorciado(a)</item>
         <item>Viúvo(a)</item>
+        <item>Separado(a)</item>
     </string-array>
 
     <string name="estado_civil_prompt">Selecione o estado civil</string>
