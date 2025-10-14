@@ -2,14 +2,8 @@ package com.aula.aion;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +19,9 @@ import com.aula.aion.databinding.ActivityInicioBinding;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.ui.home.BottomSheetBatidaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Inicio extends AppCompatActivity {
 
@@ -74,7 +71,6 @@ public class Inicio extends AppCompatActivity {
             NavigationUI.setupWithNavController(navView, navController);
         }
 
-        // FAB para abrir batida
         binding.flbBatida.setOnClickListener(view -> {
             BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
             Bundle args = new Bundle();
@@ -82,18 +78,13 @@ public class Inicio extends AppCompatActivity {
             bottomSheet.setArguments(args);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
 
-//            final Dialog dialog = new Dialog(this);
-//            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//            dialog.setContentView(R.layout.bottom_sheet_batida);
-//            dialog.show();
-//            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//            dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//            dialog.getWindow().setGravity(Gravity.BOTTOM);
-
         });
 
-        // Botão perfil
+        Date dataAtual = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM");
+        String dataFormatada = formato.format(dataAtual);
+
+        binding.aionNavBar.dataatual.setText("Hoje: " + dataFormatada);        // Botão perfil
         binding.aionNavBar.profileButton.setOnClickListener(view -> {
             binding.aionNavBar.profileButton.animate()
                     .setListener(new AnimatorListenerAdapter() {
@@ -117,6 +108,9 @@ public class Inicio extends AppCompatActivity {
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
                             Intent intent = new Intent(Inicio.this, NotificacaoActivity.class);
+                            Bundle args = new Bundle();
+                            args.putSerializable("funcionario", funcionario);
+                            intent.putExtras(args);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
                         }
