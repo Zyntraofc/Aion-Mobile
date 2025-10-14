@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
@@ -14,22 +15,39 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aula.aion.adapter.JustificativaAdapter;
 import com.aula.aion.adapter.NotificacaoAdapter;
+import com.aula.aion.api.ServiceAPI_NOSQL;
 import com.aula.aion.databinding.ActivityNotificacaoBinding;
+import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.Notificacao;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import eightbitlab.com.blurview.BlurAlgorithm;
 import eightbitlab.com.blurview.RenderEffectBlur;
 import eightbitlab.com.blurview.RenderScriptBlur;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NotificacaoActivity extends AppCompatActivity {
 
     private ActivityNotificacaoBinding binding;
+    private Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,25 +62,11 @@ public class NotificacaoActivity extends AppCompatActivity {
         });
         setupBlurView();
         setupListeners();
-
-        RecyclerView recyclerView = binding.recyclerNotificacao;
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<Notificacao> lista = new ArrayList<>();
-        lista.add(new Notificacao("Aion", "Seja bem-vindo ao Aion, sua nova ferramenta de ponto. Qualquer dúvida entre em contato com seu RH responsável.", new Date()));
-        lista.add(new Notificacao("Aion", "Há 5 horas!", new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 2 dias!", new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 10 dias!", new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000)));lista.add(new Notificacao("Aion", "Seja bem-vindo ao Aion, sua nova ferramenta de ponto. Qualquer dúvida entre em contato com seu RH responsável.", new Date()));
-        lista.add(new Notificacao("Aion", "Há 5 horas!", new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 2 dias!", new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 10 dias!", new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000)));lista.add(new Notificacao("Aion", "Seja bem-vindo ao Aion, sua nova ferramenta de ponto. Qualquer dúvida entre em contato com seu RH responsável.", new Date()));
-        lista.add(new Notificacao("Aion", "Há 5 horas!", new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 2 dias!", new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 10 dias!", new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000)));lista.add(new Notificacao("Aion", "Seja bem-vindo ao Aion, sua nova ferramenta de ponto. Qualquer dúvida entre em contato com seu RH responsável.", new Date()));
-        lista.add(new Notificacao("Aion", "Há 5 horas!", new Date(System.currentTimeMillis() - 5 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 2 dias!", new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000)));
-        lista.add(new Notificacao("Aion", "Há 10 dias!", new Date(System.currentTimeMillis() - 10 * 24 * 60 * 60 * 1000)));
-        NotificacaoAdapter adapter = new NotificacaoAdapter(lista, this);
-        recyclerView.setAdapter(adapter);
+        Bundle bundle = getIntent().getExtras();
+        Funcionario funcionario = (Funcionario) bundle.getSerializable("funcionario");
+        if (funcionario != null) {
+            getNotificacaoByUser(funcionario.getCdMatricula());
+        }
     }
 
     private void setupBlurView() {
@@ -97,5 +101,59 @@ public class NotificacaoActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.stay_still, R.anim.slide_out_right);
     }
+    private void getNotificacaoByUser(Long id) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    String credentials = Credentials.basic("admin", "123456");
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", credentials)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
 
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
+                    @Override
+                    public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
+                        return LocalDateTime.parse(json.getAsString());
+                    }
+                })
+                .create();
+
+        String url = "https://ms-aion-mongodb.onrender.com/";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServiceAPI_NOSQL serviceAPI_NOSQL = retrofit.create(ServiceAPI_NOSQL.class);
+
+        Call<List<Notificacao>> call = serviceAPI_NOSQL.selecionarNotificacaoPorId(id);
+
+        call.enqueue(new Callback<List<Notificacao>>() {
+            @Override
+            public void onResponse(Call<List<Notificacao>> call, Response<List<Notificacao>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Notificacao> notificacoes = response.body();
+                    Log.d("API", "Notificações recebidas: " + notificacoes.size());
+
+                    RecyclerView recyclerView = binding.recyclerNotificacao;
+                    recyclerView.setLayoutManager(new LinearLayoutManager(NotificacaoActivity.this));
+                    NotificacaoAdapter adapter = new NotificacaoAdapter(notificacoes, NotificacaoActivity.this);
+                    recyclerView.setAdapter(adapter);
+                } else {
+                    Log.e("API", "Erro na resposta: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notificacao>> call, Throwable t) {
+                Log.e("API", "Erro na chamada: " + t.getMessage(), t);
+            }
+        });
+    }
 }
