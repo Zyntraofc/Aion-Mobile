@@ -1,21 +1,18 @@
 package com.aula.aion.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Endereco {
 
+    @SerializedName("cdEndereco")
     private Long cdEndereco;
 
     private String cep;
-
     private String rua;
-
     private Integer numero;
-
     private String complemento;
-
     private String bairro;
-
     private String cidade;
-
     private String estado;
 
     public Endereco() {}
