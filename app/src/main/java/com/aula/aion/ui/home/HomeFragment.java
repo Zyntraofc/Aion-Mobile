@@ -1,5 +1,4 @@
-package com.aula.aion.ui.home;// HomeFragment.java (Exemplo do seu fragmento inicial com a lógica do calendário)
-import android.content.Intent;
+package com.aula.aion.ui.home;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,11 +18,21 @@ import com.aula.aion.Inicio;
 import com.aula.aion.R;
 import com.aula.aion.adapter.CalendarAdapter;
 import com.aula.aion.api.ServiceAPI_SQL;
+import com.aula.aion.databinding.FragmentHomeBinding;
 import com.aula.aion.model.CalendarDay;
 import com.aula.aion.model.Funcionario;
+import com.aula.aion.model.RelatorioPresenca;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +55,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView calendarRecyclerView;
     private CalendarAdapter calendarAdapter;
     private Calendar currentCalendar;
+    private FragmentHomeBinding binding;
 
     // Construtor público vazio necessário
     public HomeFragment() {}
@@ -53,7 +65,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
         // --- Inicialização de outras coisas no HomeFragment ---
         // Ex: TextView tvWelcome = view.findViewById(R.id.tvWelcome);
         // tvWelcome.setText("Olá!");
@@ -62,8 +74,6 @@ public class HomeFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         chamaAPI_GetByEmail(email, view);
-
-
 
         monthYearTextView = view.findViewById(R.id.monthYearTextView);
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
@@ -192,6 +202,7 @@ public class HomeFragment extends Fragment {
                         if (activity != null) {
                             activity.setFuncionario(funcionarioRetorno);
                         }
+                        getRelatorioPresencas(funcionarioRetorno.getCdMatricula(), view);
                     }
                 }
             }
@@ -202,5 +213,106 @@ public class HomeFragment extends Fragment {
                 Log.d("chamaAPI_GetByEmail", "Erro na chamada da API: " + t.getMessage());
             }
         });
+    }
+
+
+
+    private void getRelatorioPresencas(Long id, View view) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    String credentials = Credentials.basic("admin", "123456");
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", credentials)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
+                    @Override
+                    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
+                        return LocalDate.parse(json.getAsString());
+                    }
+                })
+                .create();
+
+
+        String url = "https://ms-aion-jpa.onrender.com";
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+
+        ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
+
+        Call<List<RelatorioPresenca>> call = serviceAPI_SQL.listarRelatorioPresenca(id);
+
+        call.enqueue(new Callback<List<RelatorioPresenca>>() {
+            @Override
+            public void onResponse(Call<List<RelatorioPresenca>> call, Response<List<RelatorioPresenca>> response) {
+                Log.d("API", "Resposta da API: " + response.code());
+                if (response.isSuccessful()) {
+                    Log.d("API", "Sucesso na resposta: " + response.body());
+                    List<RelatorioPresenca> relatorio = response.body();
+                    processaRelatorioPresenca(relatorio, view);
+                } else {
+                    Log.e("API", "Erro na resposta: " + response.code());
+
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorBody = response.errorBody().string();
+                            Log.e("API", "Corpo do erro: " + errorBody);
+                        }
+                    } catch (Exception e) {
+                        Log.e("API", "Erro ao ler corpo da resposta: " + e.getMessage());
+                    }
+
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() ->
+                                Toast.makeText(getContext(),
+                                        "Erro ao carregar relatório: " + response.code(),
+                                        Toast.LENGTH_SHORT).show()
+                        );
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RelatorioPresenca>> call, Throwable t) {
+                Log.e("API", "Erro na chamada: " + t.getMessage(), t);
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(),
+                                    "Erro de conexão: " + t.getMessage(),
+                                    Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }
+        });
+    }
+
+    private void processaRelatorioPresenca(List<RelatorioPresenca> relatorioPresenca, View view) {
+        Log.d("API", "processaRelatorioPresenca: " + relatorioPresenca.size());
+        int presenca = 0;
+        int ausente = 0;
+        int parcial = 0;
+        int finalSemana = 0;
+
+        for (RelatorioPresenca relatorio : relatorioPresenca) {
+            switch (relatorio.getStatusDia()) {
+                case 2: presenca++; break;
+                case 4: ausente++; break;
+                case 3: parcial++; break;
+                default: finalSemana++; break;
+            }
+        }
+        TextView txtNumFalta = view.findViewById(R.id.txt_num_falta);
+        TextView txtNumPresenca = view.findViewById(R.id.txt_num_presenca);
+        txtNumPresenca.setText(String.valueOf(presenca));
+        txtNumFalta.setText(String.valueOf(ausente));
     }
 }
