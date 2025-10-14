@@ -2,6 +2,8 @@ package com.aula.aion;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -19,12 +21,11 @@ import com.aula.aion.api.ServiceAPI_CEP;
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.ActivityEditarPerfilBinding;
 import com.aula.aion.model.ApiCep;
-import com.aula.aion.model.Cargo;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.Endereco;
+import com.google.gson.Gson;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import okhttp3.Credentials;
@@ -40,19 +41,21 @@ public class EditarPerfil extends AppCompatActivity {
     private Retrofit retrofit;
     private Funcionario funcionario;
     private ActivityEditarPerfilBinding binding;
-    private String cep;
+    private String cepAtual = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_editar_perfil);
+
+        binding = ActivityEditarPerfilBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        binding = ActivityEditarPerfilBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         this.funcionario = (Funcionario) getIntent().getSerializableExtra("funcionario");
         if (funcionario != null) {
@@ -61,69 +64,127 @@ public class EditarPerfil extends AppCompatActivity {
 
         buscarEnderecoAtual(funcionario.getCdEndereco());
 
-        Spinner spinner = findViewById(R.id.spinner_estado_civil);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.estado_civil_array,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
+        habilitarCamposEdicao();
 
         View navBar = findViewById(R.id.editarPerfilNavBar);
-
         ImageView btnVoltar = navBar.findViewById(R.id.btn_voltar);
-        btnVoltar.setOnClickListener(v ->{
-            finish();
-        });
+        btnVoltar.setOnClickListener(v -> finish());
 
         binding.txtCep.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                String cep = binding.txtCep.getText().toString().trim();
-                if (!cep.isEmpty()) {
+                String cep = binding.txtCep.getText().toString().trim().replace("-", "");
+                if (!cep.isEmpty() && cep.length() == 8) {
                     consumirAPICEP(cep);
                 }
             }
         });
 
-        binding.txtCep.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) { // quando perde o foco
-                String cep = binding.txtCep.getText().toString().trim();
-                if (!cep.isEmpty()) {
-                    consumirAPICEP(cep);
+        binding.btnSalvar.setOnClickListener(v -> salvarAlteracoes());
+
+        binding.txtCep.addTextChangedListener(new TextWatcher() {
+            boolean isUpdating = false;
+            String oldText = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String str = s.toString().replaceAll("[^\\d]", ""); // só dígitos
+
+                if (isUpdating) {
+                    oldText = str;
+                    isUpdating = false;
+                    return;
                 }
+
+                StringBuilder formatted = new StringBuilder();
+                int len = str.length();
+
+                if (len > 5) {
+                    formatted.append(str.substring(0, 5))
+                            .append('-')
+                            .append(str.substring(5, Math.min(8, len)));
+                } else {
+                    formatted.append(str);
+                }
+
+                isUpdating = true;
+                binding.txtCep.setText(formatted.toString());
+                binding.txtCep.setSelection(binding.txtCep.getText().length());
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
-        binding.btnSalvar.setOnClickListener(v -> {
-            String cep = binding.txtCep.getText().toString().trim();
+    }
+
+    private void habilitarCamposEdicao() {
+        binding.txtCep.setEnabled(true);
+        binding.txtNumero.setEnabled(true);
+        binding.txtComplemento.setEnabled(true);
+    }
+
+    private void salvarAlteracoes() {
+        try {
+            if (!validarCampos()) {
+                return;
+            }
+
+            String cep = binding.txtCep.getText().toString();
             String rua = binding.txtRua.getText().toString().trim();
             String complemento = binding.txtComplemento.getText().toString().trim();
             String bairro = binding.txtBairro.getText().toString().trim();
             String cidade = binding.txtCidade.getText().toString().trim();
             String estado = binding.txtEstado.getText().toString().trim();
-            int numero = Integer.parseInt(binding.txtNumero.getText().toString().trim());
-            Endereco endereco = new Endereco(funcionario.getCdEndereco(), cep, rua, numero, complemento, bairro, cidade, estado);
-            if (!this.cep.equals(binding.txtCep.getText().toString())){ // codição se o cep foi alterado
+
+            Integer numero = Integer.parseInt(binding.txtNumero.getText().toString().trim());
+
+            Endereco endereco = new Endereco(null, cep, rua, numero, complemento, bairro, cidade, estado);
+
+            boolean alteracoesEndereco = !cepAtual.equals(endereco.getCep()) ||
+                    !binding.txtRua.getText().toString().equals(binding.txtRua.getTag() == null ? "" : binding.txtRua.getTag().toString()) ||
+                    !binding.txtBairro.getText().toString().equals(binding.txtBairro.getTag() == null ? "" : binding.txtBairro.getTag().toString()) ||
+                    !binding.txtCidade.getText().toString().equals(binding.txtCidade.getTag() == null ? "" : binding.txtCidade.getTag().toString()) ||
+                    !binding.txtEstado.getText().toString().equals(binding.txtEstado.getTag() == null ? "" : binding.txtEstado.getTag().toString()) ||
+                    numero != (binding.txtNumero.getTag() == null ? 0 : (int) binding.txtNumero.getTag()) ||
+                    !complemento.equals(binding.txtComplemento.getTag() == null ? "" : binding.txtComplemento.getTag().toString());
+
+            if (alteracoesEndereco) {
                 alterarEndereco(endereco);
             }
-            if (funcionario.getEstadoCivil().equals(binding.spinnerEstadoCivil.getSelectedItem().toString())) {
-                alterarEstadoCivil(funcionario.getCdMatricula(), binding.spinnerEstadoCivil.getSelectedItem().toString());
-            }
-            
-        });
 
-
-
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Número inválido", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void alterarEstadoCivil(Long cdMatricula, String estadoCivil) {
-        
+    private boolean validarCampos() {
+        String cep = binding.txtCep.getText().toString().trim();
+        String numero = binding.txtNumero.getText().toString().trim();
+
+        if (cep.isEmpty()) {
+            binding.txtCep.setError("CEP é obrigatório");
+            return false;
+        }
+
+        if (numero.isEmpty()) {
+            binding.txtNumero.setError("Número é obrigatório");
+            return false;
+        }
+
+        try {
+            Integer.parseInt(numero);
+        } catch (NumberFormatException e) {
+            binding.txtNumero.setError("Número inválido");
+            return false;
+        }
+
+        return true;
     }
 
     private void alterarEndereco(Endereco endereco) {
-        // Credenciais da API
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("admin", "123456");
@@ -133,7 +194,7 @@ public class EditarPerfil extends AppCompatActivity {
                     return chain.proceed(request);
                 })
                 .build();
-        //Definir a URL da API
+
         String url = "https://ms-aion-jpa.onrender.com";
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -142,15 +203,20 @@ public class EditarPerfil extends AppCompatActivity {
                 .build();
 
         ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
-
-        serviceAPI_SQL.alterarEndereco(endereco.getCdEndereco(), endereco).enqueue(new Callback<Endereco>() {
+        Log.d("API_Endereco", "Alterando endereco: " + funcionario.getCdEndereco()+ "  " + endereco.getCep());
+        Log.d("EnderecoUpdate", "Response JSON: " + new Gson().toJson(endereco));
+        serviceAPI_SQL.alterarEndereco(funcionario.getCdEndereco(), endereco).enqueue(new Callback<Endereco>() {
             @Override
             public void onResponse(Call<Endereco> call, Response<Endereco> response) {
+                Log.d("API_Endereco", "Resposta: " + response.body());
+                Log.d("EnderecoUpdate", "Response JSON: " + new Gson().toJson(response.body()));
                 if (response.isSuccessful()) {
                     Endereco retorno = response.body();
                     if (retorno != null) {
-                        Toast.makeText(EditarPerfil.this, "", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(EditarPerfil.this, Perfil.class));
+                        Toast.makeText(EditarPerfil.this, "Dados alterados com sucesso", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(EditarPerfil.this, Perfil.class);
+                        intent.putExtra("funcionario", funcionario);
+                        startActivity(intent);
                         finish();
                     }
                 }
@@ -159,13 +225,13 @@ public class EditarPerfil extends AppCompatActivity {
             @Override
             public void onFailure(Call<Endereco> call, Throwable t) {
                 t.printStackTrace();
-                Log.d("chamaAPI_GetByEmail", "Erro na chamada da API: " + t.getMessage());
+                Log.e("API_Endereco", "Erro: " + t.getMessage());
+                Toast.makeText(EditarPerfil.this, "Falha na comunicação", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void consumirAPICEP(String cep) {
-        //Definir a URL da API
         String url = "https://viacep.com.br";
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -179,28 +245,38 @@ public class EditarPerfil extends AppCompatActivity {
             public void onResponse(Call<ApiCep> call, Response<ApiCep> response) {
                 if (response.isSuccessful()) {
                     ApiCep retorno = response.body();
-                    setarInformacoesEndereco(retorno);
+                    if (retorno != null) {
+                        setarInformacoesEndereco(retorno);
+                    } else {
+                        Toast.makeText(EditarPerfil.this, "CEP não encontrado", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ApiCep> call, Throwable t) {
-                t.printStackTrace();
-                Log.d("Erro API CEP", "Erro na chamada da API: " + t.getMessage());
+                Log.e("API_CEP", "Erro: " + t.getMessage());
+                Toast.makeText(EditarPerfil.this, "Erro ao buscar CEP", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void setarInformacoesEndereco(ApiCep endereco) {
         binding.txtRua.setText(endereco.getLogradouro());
         binding.txtComplemento.setText(endereco.getComplemento());
         binding.txtBairro.setText(endereco.getBairro());
         binding.txtCidade.setText(endereco.getLocalidade());
         binding.txtEstado.setText(endereco.getUf());
+
+        binding.txtRua.setTag(endereco.getLogradouro());
+        binding.txtBairro.setTag(endereco.getBairro());
+        binding.txtCidade.setTag(endereco.getLocalidade());
+        binding.txtEstado.setTag(endereco.getUf());
     }
+
     private void setarInformacoesFuncionario(Funcionario funcionario) {
-        DateTimeFormatter formatoOrigem = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime dataHora = LocalDateTime.parse(funcionario.getNascimento(), formatoOrigem);
-        LocalDate data = dataHora.toLocalDate();
+        DateTimeFormatter formatoOrigem = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate data = LocalDate.parse(funcionario.getNascimento(), formatoOrigem);
 
         DateTimeFormatter formatoDestino = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String dataFormatada = data.format(formatoDestino);
@@ -210,43 +286,39 @@ public class EditarPerfil extends AppCompatActivity {
         binding.txtDataNascimento.setText(dataFormatada);
         setarGenero(funcionario.getSexo());
         setarEstadoCivil(funcionario.getEstadoCivil());
-
     }
-    private void setarGenero(String genero) {
 
+    private void setarGenero(String genero) {
         if (genero.equals("1")) {
             binding.txtGenero.setText("Masculino");
         } else if (genero.equals("2")) {
             binding.txtGenero.setText("Feminino");
-        }
-        else {
+        } else {
             binding.txtGenero.setText("Outro");
         }
     }
+
     private void setarEstadoCivil(String estadoCivil) {
+        String estado = "";
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.estado_civil_array,
-                android.R.layout.simple_spinner_item
-        );
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerEstadoCivil.setAdapter(adapter);
-
-        int posicao = 0;
-        switch (estadoCivil) {
-            case "1": posicao = 0; break; // Solteiro(a)
-            case "2": posicao = 1; break; // Casado(a)
-            case "3": posicao = 2; break; // Divorciado(a)
-            case "4": posicao = 3; break; // Viúvo(a)
-            case "5": posicao = 4; break; // Separado(a)
+        if (estadoCivil.equals("1")) {
+            estado = "Solteiro(a)";
+        } else if (estadoCivil.equals("2")) {
+            estado = "Casado(a)";
+        } else if (estadoCivil.equals("3")) {
+            estado = "Divorciado(a)";
+        } else if (estadoCivil.equals("4")) {
+            estado = "Viúvo(a)";
+        } else if (estadoCivil.equals("5")) {
+            estado = "Separado(a)";
+        } else {
+            estado = "Não informado";
         }
 
-        binding.spinnerEstadoCivil.setSelection(posicao);
+        binding.txtEstadoCivil.setText(estado);
     }
 
     private void buscarEnderecoAtual(Long id) {
-        // Credenciais da API
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("admin", "123456");
@@ -256,7 +328,7 @@ public class EditarPerfil extends AppCompatActivity {
                     return chain.proceed(request);
                 })
                 .build();
-        //Definir a URL da API
+
         String url = "https://ms-aion-jpa.onrender.com";
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -279,16 +351,24 @@ public class EditarPerfil extends AppCompatActivity {
                         binding.txtCidade.setText(endereco.getCidade());
                         binding.txtEstado.setText(endereco.getEstado());
                         binding.txtNumero.setText(String.valueOf(endereco.getNumero()));
-                        cep = endereco.getCep();
+
+                        cepAtual = endereco.getCep();
+
+                        binding.txtRua.setTag(endereco.getRua());
+                        binding.txtBairro.setTag(endereco.getBairro());
+                        binding.txtCidade.setTag(endereco.getCidade());
+                        binding.txtEstado.setTag(endereco.getEstado());
+                        binding.txtNumero.setTag(endereco.getNumero());
+                        binding.txtComplemento.setTag(endereco.getComplemento());
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<Endereco> call, Throwable t) {
-                t.printStackTrace();
+                Log.e("API_Endereco", "Erro ao buscar endereço: " + t.getMessage());
+                Toast.makeText(EditarPerfil.this, "Erro ao carregar endereço", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }
