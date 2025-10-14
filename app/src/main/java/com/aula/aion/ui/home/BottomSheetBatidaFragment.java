@@ -15,13 +15,16 @@ import com.aula.aion.R;
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.BottomSheetBatidaBinding;
 import com.aula.aion.model.Batida;
+import com.aula.aion.model.Batida;
 import com.aula.aion.model.Funcionario;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import androidx.core.content.ContextCompat;
 import android.text.style.ForegroundColorSpan;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -38,15 +41,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
 
     private BottomSheetBatidaBinding binding;
-    private String nomeFuncionario;
     private Retrofit retrofit;
-
-    public static BottomSheetBatidaFragment newInstance() {
-        BottomSheetBatidaFragment fragment = new BottomSheetBatidaFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private Funcionario funcionario; // <-- objeto que você passa no bundle
 
     @Nullable
     @Override
@@ -59,23 +55,25 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.FullScreenBottomSheetDialog);
+
+        // Recupera o objeto do bundle
         if (getArguments() != null) {
-            nomeFuncionario = getArguments().getString("nome");
+            funcionario = (Funcionario) getArguments().getSerializable("funcionario");
         }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         binding.txtHoraAtual.setText(mostrarHoraAtualFormatada());
-        // Recuperar os argumentos passados
-        Bundle args = getArguments();
-        if (args != null) {
-            String data = args.getString("data", "Dia 06/06");
-            binding.txtData.setText(data);
-        }
-        if (nomeFuncionario != null) {
-            binding.txtNome.setText("Olá, " + nomeFuncionario.split(" ")[0]);
+
+        if (funcionario != null) {
+            // usa o nome do funcionário
+            String nomeFuncionario = funcionario.getNomeCompleto();
+            if (nomeFuncionario != null) {
+                binding.txtNome.setText("Olá, " + nomeFuncionario.split(" ")[0]);
+            }
         }
 
         // Configurar o BottomSheetBehavior para expandir totalmente
@@ -83,17 +81,14 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
         if (bottomSheet != null) {
             BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
             behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            behavior.setSkipCollapsed(true); // Evita colapso parcial
+            behavior.setSkipCollapsed(true);
         }
 
         binding.btnBaterPonto.setOnClickListener(v -> {
             baterPonto();
         });
 
-        // Configurar o SpannableString para o texto clicável
         SpannableString spannableString = new SpannableString("Não quer confirmar? Toque aqui");
-
-        // Define a parte "Toque aqui" como clicável e azul
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
@@ -116,16 +111,16 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
         super.onDestroyView();
         binding = null;
     }
+
     private String mostrarHoraAtualFormatada(){
         LocalTime agora = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H'h'mm");
-        String horaFormatada = agora.format(formatter);
-        return horaFormatada;
+        return agora.format(formatter);
     }
 
     private void baterPonto() {
-        if (getArguments() != null) {
-            // Credenciais da API
+        if (funcionario != null) {
+            // Configura o cliente com autenticação básica
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
                         String credentials = Credentials.basic("admin", "123456");
@@ -135,39 +130,54 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
                         return chain.proceed(request);
                     })
                     .build();
-            //Definir a URL da API
+
             String url = "https://ms-aion-jpa.onrender.com";
-            retrofit = new Retrofit.Builder()
+
+            Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
+
             ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
-            Funcionario funcionario = (Funcionario) getArguments().getSerializable("funcionario");
-            serviceAPI_SQL.inserirBatida(new Batida(null, LocalDateTime.now(), null, funcionario.getCdMatricula())).enqueue(new Callback<Batida>() {
+
+            Batida batida = new Batida(LocalDateTime.now().toString(), "", funcionario.getCdMatricula(), "1", "0");
+
+            serviceAPI_SQL.inserirBatida(batida).enqueue(new Callback<Batida>() {
                 @Override
                 public void onResponse(Call<Batida> call, Response<Batida> response) {
-                    if (response.isSuccessful()) {
-                        Batida batida = response.body();
-                        if (batida != null) {
-                            binding.txtHoraAtual.setText("Batida Registrada!");
-                            try {
-                                Thread.sleep(3000); // pausa de 3 segundos
-                                dismiss();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    Log.d("API", "Chamada da API realizada");
+                    Log.d("API", "Status code: " + response.code());
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        Batida batidaResponse = response.body();
+                        Log.d("API", "Batida registrada: " + batidaResponse.getDataHoraBatida());
+
+                        Toast.makeText(requireContext(), "Batida registrada com sucesso!", Toast.LENGTH_SHORT).show();
+                        binding.txtConfitmarBatida.setText("Batida Registrada!");
+                        binding.btnBaterPonto.setEnabled(false);
+                        binding.btnBaterPonto.postDelayed(() -> dismiss(), 2000);
+                    } else {
+                        try {
+                            Log.e("API", "Erro body: " +
+                                    (response.errorBody() != null ? response.errorBody().string() : "null"));
+                        } catch (IOException e) {
+                            Log.e("API", "Erro ao ler o erro body", e);
                         }
+                        Toast.makeText(requireContext(),
+                                "Erro ao registrar batida: " + response.code(),
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Batida> call, Throwable t) {
-                    t.printStackTrace();
-                    Log.d("chamaAPI_GetByEmail", "Erro na chamada da API: " + t.getMessage());
+                    Log.e("API", "Erro na chamada da API: " + t.getMessage(), t);
+                    Toast.makeText(requireContext(), "Falha na comunicação com o servidor!", Toast.LENGTH_SHORT).show();
                     binding.txtHoraAtual.setText("Ocorreu um erro!");
                 }
             });
         }
     }
+
 }
