@@ -86,7 +86,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
         chamaAPI_GetCargoById(funcionario.getCdCargo());
     }
     private void chamaAPI_GetCargoById(Long id) {
-        Log.d("chamaAPI_GetByEmail", "Chamando API com id: " + id);
         // Credenciais da API
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
@@ -111,7 +110,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
             @Override
             public void onResponse(Call<Cargo> call, Response<Cargo> response) {
                 if (response.isSuccessful()) {
-                    Log.d("chamaAPI_GetByEmail", "Resposta da API: " + response);
                     Cargo cargo = response.body();
                     if (cargo != null) {
                         Log.d("chamaAPI_GetByEmail", "Cargo: " + cargo.getNome());

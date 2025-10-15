@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.aula.aion.R;
 import com.aula.aion.databinding.BottomSheetRedefinirSenhaBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class BottomSheetRedefinirSenhaFragment extends BottomSheetDialogFragment {
 
@@ -35,8 +36,11 @@ public class BottomSheetRedefinirSenhaFragment extends BottomSheetDialogFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         binding.btnRedefinir.setOnClickListener(v -> {
+            String email = binding.inputEmailCorporativo.getText().toString();
+            if (!email.isEmpty()) {
+                enviarEmailRedefinicaoSenha(email);
+            }
             dismiss();
         });
     }
@@ -51,5 +55,17 @@ public class BottomSheetRedefinirSenhaFragment extends BottomSheetDialogFragment
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void enviarEmailRedefinicaoSenha(String email) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        System.out.println("E-mail de redefinição enviado para: " + email);
+                    } else {
+                        System.err.println("Erro ao enviar e-mail: " + task.getException());
+                    }
+                });
     }
 }

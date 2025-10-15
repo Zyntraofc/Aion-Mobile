@@ -25,6 +25,10 @@ import com.aula.aion.model.Notificacao;
 import com.aula.aion.model.Reclamacao;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -47,27 +51,28 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
         }
 
         public void bind(Notificacao notificacao) {
-            binding.txtRemetente.setText(notificacao.getRemetente());
-            binding.txtConteudo.setText(notificacao.getConteudo());
-            // Calcular a diferença de tempo em milissegundos
+            binding.txtTitulo.setText(notificacao.getTitulo());
+            binding.txtConteudo.setText(notificacao.getDescricao());
+            LocalDateTime dataNotificacao = notificacao.getData();
+
+            ZonedDateTime zonedDateTime = dataNotificacao.atZone(ZoneId.systemDefault());
+            long notificationTime = zonedDateTime.toInstant().toEpochMilli();
+
             long now = System.currentTimeMillis();
-            long notificationTime = notificacao.getData().getTime();
             long diffInMillis = now - notificationTime;
 
-            // Converter para horas
             long diffInHours = TimeUnit.MILLISECONDS.toHours(diffInMillis);
 
             if (diffInHours < 24) {
                 // Menos de 1 dia: mostrar em horas (ex.: "5h")
-                long hours = diffInHours;
-                binding.txtTempo.setText(hours + "h");
+                binding.txtTempo.setText(diffInHours + "h");
             } else if (diffInHours < 24 * 7) {
                 // De 1 a 6 dias: mostrar em dias (ex.: "2d")
                 long days = TimeUnit.MILLISECONDS.toDays(diffInMillis);
                 binding.txtTempo.setText(days + "d");
             } else {
                 // 7 dias ou mais: mostrar em semanas (ex.: "1w")
-                long weeks = diffInMillis / (7 * 24 * 60 * 60 * 1000);
+                long weeks = diffInMillis / (7L * 24 * 60 * 60 * 1000);
                 binding.txtTempo.setText(weeks + "w");
             }
         }
@@ -103,9 +108,16 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
             }
 
             // Preencher os dados
-            binding.txtNmRemetente.setText(notificacao.getRemetente() != null ? notificacao.getRemetente() : "Desconhecido");
-            binding.txtConteudoCompleto.setText(notificacao.getConteudo() != null && !notificacao.getConteudo().isBlank() ? notificacao.getConteudo() : "Sem conteúdo");
-            binding.txtTempo2.setText(notificacao.getData() != null ? new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(notificacao.getData()) : "N/A");
+            binding.txtNmRemetente.setText(notificacao.getTitulo() != null ? notificacao.getTitulo() : "Desconhecido");
+            binding.txtConteudoCompleto.setText(notificacao.getDescricao() != null && !notificacao.getDescricao().isBlank() ? notificacao.getDescricao() : "Sem conteúdo");
+            if (notificacao.getData() != null) {
+                Date date = Date.from(notificacao.getData().atZone(ZoneId.systemDefault()).toInstant());
+                String formatada = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(date);
+                binding.txtTempo2.setText(formatada);
+            } else {
+                binding.txtTempo2.setText("N/A");
+            }
+
 
             dialog.show();
         });

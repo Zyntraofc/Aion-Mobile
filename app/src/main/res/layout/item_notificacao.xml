@@ -26,7 +26,7 @@
         app:srcCompat="@drawable/logo" />
 
     <TextView
-        android:id="@+id/txt_remetente"
+        android:id="@+id/txt_titulo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
@@ -44,8 +44,8 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Seja bem-vindo ao Aion, sua nova ferramenta de ponto. Qualquer dúvida entre em contato com seu RH responsável."
-        app:layout_constraintStart_toStartOf="@+id/txt_remetente"
-        app:layout_constraintTop_toBottomOf="@+id/txt_remetente" />
+        app:layout_constraintStart_toStartOf="@+id/txt_titulo"
+        app:layout_constraintTop_toBottomOf="@+id/txt_titulo" />
 
     <TextView
         android:id="@+id/txt_tempo"
@@ -56,7 +56,7 @@
         android:text="1h"
         android:textColor="@color/text_gray"
         app:layout_constraintStart_toEndOf="@+id/txt_conteudo"
-        app:layout_constraintTop_toTopOf="@+id/txt_remetente" />
+        app:layout_constraintTop_toTopOf="@+id/txt_titulo" />
 
     <View
         android:id="@+id/view"

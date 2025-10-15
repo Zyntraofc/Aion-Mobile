@@ -54,4 +54,6 @@ dependencies {
     implementation(libs.blurview.vversion310)
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation ("com.google.firebase:firebase-messaging")
+    implementation ("com.google.firebase:firebase-analytics")
 }
