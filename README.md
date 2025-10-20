@@ -10,44 +10,20 @@ O Aion Mobile é parte do ecossistema modular da Zyntra, promovendo uma jornada 
 
 ## ⚙️ Stack Tecnológica
 
-- **Framework**: React Native (Expo)
-- **Linguagem**: TypeScript
-- **Gerenciamento de Estado**: Zustand + Context API
-- **API**: REST (Axios)
-- **Autenticação**: OAuth2 com refresh token
-- **CI/CD**: EAS (Expo Application Services)
-- **Armazenamento Local**: AsyncStorage
-- **Monitoramento**: Sentry + Firebase Crashlytics
-
----
-
-## 🔑 Funcionalidades Core
-
-- Login seguro com autenticação multifator
-- Registro de ponto (geolocalizado e com selfie, se habilitado)
-- Justificativas de ausência com anexo de documentos
-- Timeline de presença e faltas
-- Feedback de performance (KPI de presença)
-- Comunicação com RH (mensagens e notificações push)
+- **Framework**: Android Studios
+- **Linguagem**: Java
+- **API**: REST 
+- **Autenticação**: Basic
+- **CI/CD**: GitHub Actions
 
 ---
 
 ## 🧪 Ambiente de Desenvolvimento
 
-### Requisitos:
-- Node.js 18+
-- Yarn 1.22+
-- Expo CLI
-- Conta no Expo Go
-- `.env` com variáveis de ambiente (modelo disponível em `.env.example`)
-
 ### Instalação:
 ```bash
 git clone https://github.com/zyntra/aion-mobile.git
 cd aion-mobile
-yarn install
-cp .env.example .env
-expo start
 ```
 
 ---
@@ -56,15 +32,33 @@ expo start
 
 ```bash
 src/
-├── assets/              # Imagens e ícones
-├── components/          # Componentes reutilizáveis
-├── contexts/            # Context API Providers
-├── hooks/               # Custom hooks
-├── screens/             # Telas da aplicação
-├── services/            # Serviços (API, Storage, etc)
-├── store/               # Zustand stores
-├── styles/              # Temas e estilos globais
-├── utils/               # Funções utilitárias
+├── java/
+│   └── com.aula.aion/
+│       ├── adapter/          # Classes de adaptação (Adapters para RecyclerView, ListView, etc)
+│       ├── api/              # Comunicação com APIs e serviços externos
+│       ├── model/            # Classes de modelo (entidades e dados)
+│       ├── notification/     # Lógica relacionada a notificações
+│       ├── ui/               # Lógica de todas as tela mobile
+│       └── widgets/          # Telas principais e componentes de UI
+│       ├── EditarPerfil      # Tela de edição de perfil
+│       ├── Inicio            # Tela inicial do app
+│       ├── Login             # Tela de login
+│       ├── LogoutCallback    # Callback para logout
+│       ├── NotificacaoActivity # Tela de notificações
+│       ├── Perfil            # Tela de perfil
+│       └── SplashScreen      # Tela de splash (inicial)
+│
+├── res/                         # Recursos do aplicativo
+│   ├── anim/                    # Animações XML
+│   ├── color/                   # Definições de cores
+│   ├── drawable/                # Imagens vetoriais e assets gráficos
+│   ├── font/                    # Fontes personalizadas
+│   ├── layout/                  # Layouts XML das telas
+│   ├── menu/                    # Menus XML (Toolbar, BottomNav, etc)
+│   ├── mipmap/                  # Ícones do aplicativo (launcher)
+│   ├── navigation/              # Gráficos de navegação (NavGraph)
+│   └── values/                  # Strings, dimensões, estilos e temas
+
 ```
 
 ---
@@ -82,25 +76,19 @@ src/
 - PRs com descrição clara e checklist de revisão
 - Testes unitários obrigatórios para novas funcionalidades
 - Revisões semanais de dependências (segurança e performance)
-- Feature toggles para funcionalidades ainda não liberadas
 
 ---
 
 ## 🚀 Roadmap (Q3 2025)
 
-- [ ] Módulo de saúde emocional (pulse check)
-- [ ] Integração com calendário de férias
-- [ ] Dashboard de bem-estar para o colaborador
-- [ ] Suporte a múltiplas filiais/empresas
+- [x] Dashboard de bem-estar para o colaborador
+- [x] Suporte a múltiplas filiais/empresas
 
 ---
 
 ## 👥 Contribuidores
 
-- **Product Owner**: [Nome do PO]
-- **Tech Lead Mobile**: [Nome do TL]
-- **UX/UI Designer**: [Nome do Designer]
-- **Desenvolvedores**: [Lista da Squad Mobile]
+- **Desenvolvedores**: [Vinicius Abs Soares, Jefferson Custodio Lopes]
 
 ---
 
