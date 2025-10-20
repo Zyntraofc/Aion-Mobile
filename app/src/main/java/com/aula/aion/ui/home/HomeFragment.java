@@ -1,4 +1,5 @@
 package com.aula.aion.ui.home;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +20,6 @@ import com.aula.aion.R;
 import com.aula.aion.adapter.CalendarAdapter;
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.FragmentHomeBinding;
-import com.aula.aion.model.CalendarDay;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.RelatorioPresenca;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment {
     private CalendarAdapter calendarAdapter;
     private Calendar currentCalendar;
     private FragmentHomeBinding binding;
+    private List<RelatorioPresenca> relatorioPresencaList;
 
     // Construtor público vazio necessário
     public HomeFragment() {}
@@ -66,11 +67,7 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        // --- Inicialização de outras coisas no HomeFragment ---
-        // Ex: TextView tvWelcome = view.findViewById(R.id.tvWelcome);
-        // tvWelcome.setText("Olá!");
-        // Ex: Button btnAction = view.findViewById(R.id.btnAction);
-        // btnAction.setOnClickListener(...)
+
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         chamaAPI_GetByEmail(email, view);
@@ -81,8 +78,7 @@ public class HomeFragment extends Fragment {
         ImageButton nextMonthButton = view.findViewById(R.id.nextMonthButton);
 
         currentCalendar = Calendar.getInstance();
-
-        setupCalendar(); // Chama o método de configuração do calendário
+        relatorioPresencaList = new ArrayList<>();
 
         previousMonthButton.setOnClickListener(v -> {
             currentCalendar.add(Calendar.MONTH, -1);
@@ -97,13 +93,13 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    // --- Método setupCalendar() movido para HomeFragment ---
     private void setupCalendar() {
         if (getContext() == null) return;
 
-        monthYearTextView.setText(new SimpleDateFormat("MMMM 'de' yyyy", new Locale("pt", "BR")).format(currentCalendar.getTime()));
+        monthYearTextView.setText(new SimpleDateFormat("MMMM 'de' yyyy", new Locale("pt", "BR"))
+                .format(currentCalendar.getTime()));
 
-        List<CalendarDay> days = new ArrayList<>();
+        List<CalendarAdapter.CalendarDay> days = new ArrayList<>();
         Calendar monthCalendar = (Calendar) currentCalendar.clone();
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1);
 
@@ -111,64 +107,73 @@ public class HomeFragment extends Fragment {
         if (firstDayOfMonth == -1) firstDayOfMonth = 6;
         if (firstDayOfMonth == 0) firstDayOfMonth = 7;
 
+        // Adicionar dias do mês anterior
         Calendar prevMonthCalendar = (Calendar) monthCalendar.clone();
         prevMonthCalendar.add(Calendar.MONTH, -1);
         int daysInPrevMonth = prevMonthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         for (int i = firstDayOfMonth - 1; i >= 0; i--) {
-            CalendarDay day = new CalendarDay(String.valueOf(daysInPrevMonth - i), false, daysInPrevMonth - i);
-            if (currentCalendar.get(Calendar.YEAR) == 2025 && currentCalendar.get(Calendar.MONTH) == Calendar.JUNE) {
-                if (prevMonthCalendar.get(Calendar.YEAR) == 2025 && prevMonthCalendar.get(Calendar.MONTH) == Calendar.MAY) {
-                    if (day.getDayOfMonth() == 30 || day.getDayOfMonth() == 31) {
-                        day.setGreenOutline(true);
-                    }
-                }
-            }
+            int dayNum = daysInPrevMonth - i;
+            prevMonthCalendar.set(Calendar.DAY_OF_MONTH, dayNum);
+            LocalDate dataDia = LocalDate.of(
+                    prevMonthCalendar.get(Calendar.YEAR),
+                    prevMonthCalendar.get(Calendar.MONTH) + 1,
+                    dayNum
+            );
+            CalendarAdapter.CalendarDay day = new CalendarAdapter.CalendarDay(
+                    String.valueOf(dayNum), false, dataDia
+            );
             days.add(day);
         }
 
+        // Adicionar dias do mês atual
         int daysInMonth = monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         for (int i = 1; i <= daysInMonth; i++) {
-            CalendarDay day = new CalendarDay(String.valueOf(i), true, i);
-
-            if (currentCalendar.get(Calendar.YEAR) == 2025 && currentCalendar.get(Calendar.MONTH) == Calendar.JUNE) {
-                switch (i) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 8:
-                    case 9:
-                        day.setGreenOutline(true);
-                        break;
-                    case 6:
-                    case 7:
-                        day.setRedOutline(true);
-                        break;
-                    case 10:
-                        day.setPurpleFill(true);
-                        break;
-                }
-            }
+            monthCalendar.set(Calendar.DAY_OF_MONTH, i);
+            LocalDate dataDia = LocalDate.of(
+                    monthCalendar.get(Calendar.YEAR),
+                    monthCalendar.get(Calendar.MONTH) + 1,
+                    i
+            );
+            CalendarAdapter.CalendarDay day = new CalendarAdapter.CalendarDay(
+                    String.valueOf(i), true, dataDia
+            );
             days.add(day);
         }
 
+        // Adicionar dias do próximo mês
         int totalDays = days.size();
         int daysToAddNextMonth = 0;
         if (totalDays < 42) {
             daysToAddNextMonth = 42 - totalDays;
         }
 
+        Calendar nextMonthCalendar = (Calendar) monthCalendar.clone();
+        nextMonthCalendar.add(Calendar.MONTH, 1);
+        nextMonthCalendar.set(Calendar.DAY_OF_MONTH, 1);
+
         for (int i = 1; i <= daysToAddNextMonth; i++) {
-            days.add(new CalendarDay(String.valueOf(i), false, i));
+            nextMonthCalendar.set(Calendar.DAY_OF_MONTH, i);
+            LocalDate dataDia = LocalDate.of(
+                    nextMonthCalendar.get(Calendar.YEAR),
+                    nextMonthCalendar.get(Calendar.MONTH) + 1,
+                    i
+            );
+            CalendarAdapter.CalendarDay day = new CalendarAdapter.CalendarDay(
+                    String.valueOf(i), false, dataDia
+            );
+            days.add(day);
         }
 
-        calendarAdapter = new CalendarAdapter(getContext(), days);
+        // Criar e configurar o adapter com a lista de relatórios
+        calendarAdapter = new CalendarAdapter(getContext(), days, relatorioPresencaList);
         calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
+
     private void chamaAPI_GetByEmail(String email, View view) {
         Log.d("chamaAPI_GetByEmail", "Chamando API com email: " + email);
-        // Credenciais da API
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("admin", "123456");
@@ -178,7 +183,7 @@ public class HomeFragment extends Fragment {
                     return chain.proceed(request);
                 })
                 .build();
-        //Definir a URL da API
+
         String url = "https://ms-aion-jpa.onrender.com";
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -215,8 +220,6 @@ public class HomeFragment extends Fragment {
         });
     }
 
-
-
     private void getRelatorioPresencas(Long id, View view) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
@@ -227,6 +230,7 @@ public class HomeFragment extends Fragment {
                     return chain.proceed(request);
                 })
                 .build();
+
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
                     @Override
@@ -236,7 +240,6 @@ public class HomeFragment extends Fragment {
                     }
                 })
                 .create();
-
 
         String url = "https://ms-aion-jpa.onrender.com";
 
@@ -260,7 +263,6 @@ public class HomeFragment extends Fragment {
                     processaRelatorioPresenca(relatorio, view);
                 } else {
                     Log.e("API", "Erro na resposta: " + response.code());
-
                     try {
                         if (response.errorBody() != null) {
                             String errorBody = response.errorBody().string();
@@ -297,6 +299,10 @@ public class HomeFragment extends Fragment {
 
     private void processaRelatorioPresenca(List<RelatorioPresenca> relatorioPresenca, View view) {
         Log.d("API", "processaRelatorioPresenca: " + relatorioPresenca.size());
+
+        // Armazenar a lista de relatórios para uso no calendário
+        relatorioPresencaList = relatorioPresenca;
+
         int presenca = 0;
         int ausente = 0;
         int parcial = 0;
@@ -310,9 +316,12 @@ public class HomeFragment extends Fragment {
                 default: finalSemana++; break;
             }
         }
+
         TextView txtNumFalta = view.findViewById(R.id.txt_num_falta);
         TextView txtNumPresenca = view.findViewById(R.id.txt_num_presenca);
         txtNumPresenca.setText(String.valueOf(presenca));
         txtNumFalta.setText(String.valueOf(ausente));
+
+        setupCalendar();
     }
 }
