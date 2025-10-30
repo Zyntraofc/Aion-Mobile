@@ -93,7 +93,7 @@
     <string name="mn_justificativa">Justificaviva</string>
     <string name="mn_reclamacao">Reclamação</string>
     <string name="mn_dashboard">Dashboard</string>
-    <string name="txt_reclamacao">Registrar Ocorrência</string>
+    <string name="txt_reclamacao">Registrar Reclamação</string>
     <string name="estado_civil_prompt">Selecione o estado civil</string>
 
     <string name="default_notification_channel_id">fcm_default_channel</string>
