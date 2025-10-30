@@ -3,7 +3,13 @@ package com.aula.aion;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Outline;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,18 +21,33 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.aula.aion.api.ServiceAPI_NOSQL;
 import com.aula.aion.databinding.ActivityInicioBinding;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.ui.home.BottomSheetBatidaFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Inicio extends AppCompatActivity {
 
     private Funcionario funcionario;
-    ActivityInicioBinding binding;
+    private ActivityInicioBinding binding;
+    private static final String FOTO_NOME = "foto_perfil.jpg";
+    private Retrofit retrofit;
 
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
@@ -34,6 +55,10 @@ public class Inicio extends AppCompatActivity {
 
     public Funcionario getFuncionario() {
         return funcionario;
+    }
+
+    public ActivityInicioBinding getBinding() {
+        return binding;
     }
 
     @Override
@@ -71,20 +96,24 @@ public class Inicio extends AppCompatActivity {
             NavigationUI.setupWithNavController(navView, navController);
         }
 
+        // Carregar foto do perfil
+        carregarFotoSalva();
+
         binding.flbBatida.setOnClickListener(view -> {
             BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
             Bundle args = new Bundle();
             args.putSerializable("funcionario", funcionario);
             bottomSheet.setArguments(args);
             bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
-
         });
 
         Date dataAtual = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM");
         String dataFormatada = formato.format(dataAtual);
 
-        binding.aionNavBar.dataatual.setText("Hoje: " + dataFormatada);        // Botão perfil
+        binding.aionNavBar.dataatual.setText("Hoje: " + dataFormatada);
+
+        // Botão perfil
         binding.aionNavBar.profileButton.setOnClickListener(view -> {
             binding.aionNavBar.profileButton.animate()
                     .setListener(new AnimatorListenerAdapter() {
@@ -117,5 +146,89 @@ public class Inicio extends AppCompatActivity {
                     })
                     .start();
         });
+
+        NavController finalNavController = navController;
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.nav_justificativa && arguments != null) {
+                boolean fromCalendar = arguments.getBoolean("fromCalendar", false);
+
+                if (fromCalendar) {
+                    binding.navView.post(() -> {
+                        binding.navView.setOnItemSelectedListener(item -> {
+                            if (item.getItemId() == R.id.nav_home) {
+                                controller.popBackStack(R.id.nav_home, false);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                    });
+                } else {
+                    binding.navView.post(() -> {
+                        NavigationUI.setupWithNavController(binding.navView, controller);
+                    });
+                }
+            } else {
+                binding.navView.post(() -> {
+                    NavigationUI.setupWithNavController(binding.navView, finalNavController);
+                });
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Recarregar a foto quando voltar para a activity
+        carregarFotoSalva();
+    }
+
+    private void carregarFotoSalva() {
+        try {
+            File dir = getFilesDir();
+            File arquivo = new File(dir, FOTO_NOME);
+            if (arquivo.exists()) {
+                FileInputStream fis = new FileInputStream(arquivo);
+                Bitmap bitmap = BitmapFactory.decodeStream(fis);
+                fis.close();
+                if (bitmap != null) {
+                    aplicarImagemPerfil(bitmap);
+                    Log.d("CarregarFoto", "Foto carregada com sucesso na Activity Inicio!");
+                }
+            } else {
+                // Se não há foto salva, garante que está no formato padrão
+                removerFormatoCircular();
+                Log.d("CarregarFoto", "Nenhuma foto encontrada, usando ícone padrão");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("CarregarFoto", "Erro ao carregar foto: " + e.getMessage());
+        }
+    }
+
+    private void aplicarImagemPerfil(Bitmap bitmap) {
+        // Define a imagem no ImageView (profileButton)
+        binding.aionNavBar.profileButton.setImageBitmap(bitmap);
+
+        // Configura o ImageView para usar ScaleType que mantém proporção
+        binding.aionNavBar.profileButton.setScaleType(android.widget.ImageView.ScaleType.CENTER_CROP);
+
+        // Aplica formato circular apenas quando há foto
+        binding.aionNavBar.profileButton.setOutlineProvider(new ViewOutlineProvider() {
+            @Override
+            public void getOutline(View view, Outline outline) {
+                // Cria um círculo perfeito
+                outline.setOval(0, 0, view.getWidth(), view.getHeight());
+            }
+        });
+        binding.aionNavBar.profileButton.setClipToOutline(true);
+    }
+
+    private void removerFormatoCircular() {
+        // Remove o formato circular (volta ao padrão/ícone)
+        binding.aionNavBar.profileButton.setOutlineProvider(ViewOutlineProvider.BACKGROUND);
+        binding.aionNavBar.profileButton.setClipToOutline(false);
+        binding.aionNavBar.profileButton.setScaleType(android.widget.ImageView.ScaleType.FIT_CENTER);
+        binding.aionNavBar.profileButton.setImageResource(R.drawable.usericon);
     }
 }
