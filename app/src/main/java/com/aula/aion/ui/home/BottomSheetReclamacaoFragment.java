@@ -1,6 +1,10 @@
 package com.aula.aion.ui.home;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import com.aula.aion.R;
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.BottomSheetReclamacaoBinding;
@@ -71,29 +77,58 @@ public class BottomSheetReclamacaoFragment extends BottomSheetDialogFragment  {
         binding.getRoot();
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = BottomSheetReclamacaoBinding.inflate(inflater, container, false);
-        binding.txtData.setText(String.format("%s", new SimpleDateFormat("dd/MM", Locale.getDefault()).format(new Date())));
+    public void onStart() {
+        super.onStart();
+
         View bottomSheet = getDialog().findViewById(com.google.android.material.R.id.design_bottom_sheet);
         if (bottomSheet != null) {
             BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
             behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            behavior.setSkipCollapsed(true); // Evita colapso parcial
+            behavior.setSkipCollapsed(true);
+            behavior.setDraggable(true); // opcional
         }
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = BottomSheetReclamacaoBinding.inflate(inflater, container, false);
+
+        SpannableString spannableString = new SpannableString("Não quer confirmar? Toque aqui");
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                dismiss();
+            }
+        };
+
+        int startIndex = spannableString.toString().indexOf("Toque aqui");
+        int endIndex = startIndex + "Toque aqui".length();
+        spannableString.setSpan(clickableSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.blue)), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        binding.txtLink2.setText(spannableString);
+        binding.txtLink2.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+        binding.txtLink2.setHighlightColor(ContextCompat.getColor(requireContext(), android.R.color.transparent));
+
+        binding.txtData.setText(String.format("%s", new SimpleDateFormat("dd/MM", Locale.getDefault()).format(new Date())));
+
         listarTpReclamacao(binding.spinner);
+
         binding.btnRegistrar.setOnClickListener(v -> {
             if (getArguments() != null) {
                 Long lCdFuncionario = (Long) getArguments().getLong("lCdFuncionario") ;
                 Long lCdTpReclamacao = 0L;
                 int posicaoSelecionada = binding.spinner.getSelectedItemPosition();
+
                 if (posicaoSelecionada >= 0 && listaTpReclamacao != null) {
                     TpReclamacao selecionado = listaTpReclamacao.get(posicaoSelecionada);
                     lCdTpReclamacao = selecionado.getCdTpReclamacao();
                 }
 
-                Reclamacao reclamacao = new Reclamacao(null, LocalDate.now(), binding.editDescricao.getText().toString(), lCdFuncionario, lCdTpReclamacao, "A");
+                Reclamacao reclamacao = new Reclamacao(null, LocalDate.now(), binding.editDescricao.getText().toString(), lCdFuncionario, lCdTpReclamacao, "A", null);
                 Log.d("API", "Vai chamar o metodo");
                 inserirReclamacao(reclamacao);
             }
@@ -107,7 +142,7 @@ public class BottomSheetReclamacaoFragment extends BottomSheetDialogFragment  {
         // Configura o cliente com autenticação básica
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
@@ -171,7 +206,7 @@ public class BottomSheetReclamacaoFragment extends BottomSheetDialogFragment  {
     private void listarTpReclamacao(Spinner spinner) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
