@@ -7,21 +7,20 @@ public class Notificacao {
     private int cdFuncionario;
     private String descricao;
     private String titulo;
-    private LocalDateTime data; // pode ser LocalDateTime se quiser trabalhar com datas
+    private LocalDateTime data;
+    private String status;
 
-    // Construtor padrão
     public Notificacao() {}
 
-    // Construtor completo
-    public Notificacao(String cdNotificacao, int cdFuncionario, String descricao, String titulo, LocalDateTime data) {
+    public Notificacao(String cdNotificacao, int cdFuncionario, String descricao, String titulo, LocalDateTime data, String status) {
         this.cdNotificacao = cdNotificacao;
         this.cdFuncionario = cdFuncionario;
         this.descricao = descricao;
         this.titulo = titulo;
         this.data = data;
+        this.status = status;
     }
 
-    // Getters e Setters
     public String getCdNotificacao() {
         return cdNotificacao;
     }
@@ -60,6 +59,14 @@ public class Notificacao {
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 
