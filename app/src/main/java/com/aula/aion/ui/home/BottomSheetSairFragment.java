@@ -41,13 +41,19 @@ public class BottomSheetSairFragment extends BottomSheetDialogFragment {
         setStyle(STYLE_NORMAL, R.style.FullScreenBottomSheetDialog);
     }
 
-    // Método para definir o callback
     public void setLogoutCallback(LogoutCallback callback) {
         this.logoutCallback = callback;
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.btnSair.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(requireContext(), Login.class);
+            startActivity(intent);
+            dismiss();
+        });
 
         binding.btnCancelar.setOnClickListener(v -> {
             if (logoutCallback != null) {
@@ -56,13 +62,7 @@ public class BottomSheetSairFragment extends BottomSheetDialogFragment {
             dismiss();
         });
 
-        binding.btnSair.setOnClickListener(v -> {
-            if (logoutCallback != null) {
-                logoutCallback.onLogoutDecision(true);
-                FirebaseAuth.getInstance().signOut();
-            }
-            dismiss();
-        });
+
     }
 
     @Override
