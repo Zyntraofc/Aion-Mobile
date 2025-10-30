@@ -30,7 +30,6 @@ public class JustificativaAdapter extends RecyclerView.Adapter<JustificativaAdap
         }
 
         public void bind(Justificativa justificativa) {
-            binding.tituloTextView.setText(justificativa.getTitulo());
             binding.dataTextView.setText(justificativa.getData());
         }
     }
@@ -45,23 +44,19 @@ public class JustificativaAdapter extends RecyclerView.Adapter<JustificativaAdap
 
     @Override
     public void onBindViewHolder(@NonNull JustificativaAdapter.ViewHolder holder, int position) {
-        Justificativa justificativa = justificativas.get(position); // Obtém o objeto Justificativa
+        Justificativa justificativa = justificativas.get(position);
         holder.bind(justificativa);
 
         holder.itemView.setOnClickListener(v -> {
             BottomSheetJustificativaFragment bottomSheet = BottomSheetJustificativaFragment.newInstance();
-
-            // Passar dados para o BottomSheet
             Bundle args = new Bundle();
-            args.putString("data", justificativa.getData()); // Usa o método getData() da Justificativa
-            args.putString("titulo", justificativa.getTitulo()); // Opcional: passa o título
-            bottomSheet.setArguments(args);
+            args.putInt("numInclusao", justificativa.getNumInclusao());
+            args.putString("data", justificativa.getData());
 
-            // Exibir o BottomSheet com verificação de contexto
+            bottomSheet.setArguments(args);
             if (v.getContext() instanceof FragmentActivity) {
                 bottomSheet.show(((FragmentActivity) v.getContext()).getSupportFragmentManager(), "BottomSheetJustificativa");
             } else {
-                // Lidar com caso em que o contexto não é uma FragmentActivity (opcional)
                 throw new IllegalStateException("Contexto não é uma FragmentActivity");
             }
         });
@@ -72,9 +67,8 @@ public class JustificativaAdapter extends RecyclerView.Adapter<JustificativaAdap
         return justificativas.size();
     }
 
-    // Atualização segura da lista
     public void updateList(List<Justificativa> novaLista) {
         this.justificativas = novaLista;
-        notifyDataSetChanged(); // Substituir futuramente por DiffUtil para maior performance
+        notifyDataSetChanged();
     }
 }
