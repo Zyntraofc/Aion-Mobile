@@ -16,15 +16,18 @@ public class Reclamacao {
 
     private String status;
 
+    private String resposta;
+
     public Reclamacao() {}
 
-    public Reclamacao(Long cdReclamacao, LocalDate reclamacao, String descricao, Long cdFuncionario, Long cdTpReclamacao, String status) {
+    public Reclamacao(Long cdReclamacao, LocalDate reclamacao, String descricao, Long cdFuncionario, Long cdTpReclamacao, String status, String resposta) {
         this.cdReclamacao = cdReclamacao;
         this.reclamacao = reclamacao;
         this.descricao = descricao;
         this.cdFuncionario = cdFuncionario;
         this.cdTpReclamacao = cdTpReclamacao;
         this.status = status;
+        this.resposta = resposta;
     }
 
     public Long getCdReclamacao() {
@@ -67,11 +70,17 @@ public class Reclamacao {
         this.cdTpReclamacao = cdTpReclamacao;
     }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus() { return status;}
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getResposta() {
+        return resposta;
+    }
+
+    public void setResposta(String resposta) {
+        this.resposta = resposta;
     }
 }
