@@ -88,16 +88,17 @@
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            app:contentPaddingLeft="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/edittext_border"
                 android:orientation="horizontal"
-                android:paddingStart="20dp"
+                android:paddingStart="30dp"
                 android:paddingEnd="20dp"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
 
@@ -115,7 +116,8 @@
                     android:fontFamily="@font/poppins_light"
                     android:hint="Hora entrada"
                     android:textSize="15dp"
-                    android:inputType="time"
+                    android:inputType="number"
+                    android:maxLength="5"
                     android:background="@android:color/transparent"
                     android:textColorHint="@color/light_gray" />
 
@@ -128,16 +130,18 @@
             android:layout_weight="1"
             android:layout_marginStart="8dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+            app:contentPaddingLeft="20dp"
+            android:id="@+id/card_saida">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/edittext_border"
                 android:orientation="horizontal"
-                android:paddingStart="15dp"
+                android:paddingStart="30dp"
                 android:paddingEnd="15dp"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
 
@@ -155,7 +159,8 @@
                     android:fontFamily="@font/poppins_light"
                     android:hint="Hora saída"
                     android:textSize="15dp"
-                    android:inputType="time"
+                    android:inputType="number"
+                    android:maxLength="5"
                     android:background="@android:color/transparent"
                     android:textColorHint="@color/light_gray" />
 
@@ -193,7 +198,7 @@
                 android:textSize="10sp" />
 
             <EditText
-                android:id="@+id/kldededed"
+                android:id="@+id/txt_justificativa"
                 android:layout_width="305dp"
                 android:layout_height="47dp"
                 android:layout_marginStart="30dp"
@@ -201,7 +206,8 @@
                 android:hint="@string/hint_email"
                 android:inputType="text"
                 android:paddingBottom="12.5dp"
-                android:textColorHint="@color/light_gray" />
+                android:textColorHint="@color/light_gray"
+                android:background="@null" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
