@@ -52,10 +52,10 @@
                 android:src="@drawable/ic_clock" />
 
             <TextView
-                android:id="@+id/diasRestantesTextView"
+                android:id="@+id/txt_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="3 dias restantes"
+                android:text="Justifique suas faltas!"
                 android:textColor="@color/text_gray"
                 android:textSize="13sp" />
         </LinearLayout>
