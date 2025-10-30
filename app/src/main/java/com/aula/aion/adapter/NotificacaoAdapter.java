@@ -2,9 +2,11 @@ package com.aula.aion.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,16 +15,23 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.aion.EditarPerfil;
+import com.aula.aion.Perfil;
 import com.aula.aion.R;
+import com.aula.aion.api.ServiceAPI_NOSQL;
+import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.BottomSheetNotificacaoBinding;
 import com.aula.aion.databinding.ItemNotificacaoBinding;
 import com.aula.aion.databinding.ItemReclamacaoBinding;
+import com.aula.aion.model.Endereco;
 import com.aula.aion.model.Notificacao;
 import com.aula.aion.model.Reclamacao;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -33,14 +42,24 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter.ViewHolder> {
 
-    private List<Notificacao> notificacaos;
+    private List<Notificacao> notificacoes;
     private Activity activity;
+    private Retrofit retrofit;
 
     public NotificacaoAdapter(List<Notificacao> notificacaos, Activity activity) {
         this.activity = activity;
-        this.notificacaos = notificacaos;
+        this.notificacoes = notificacaos;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -54,6 +73,9 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
             binding.txtTitulo.setText(notificacao.getTitulo());
             binding.txtConteudo.setText(notificacao.getDescricao());
             LocalDateTime dataNotificacao = notificacao.getData();
+
+            if (notificacao.getStatus().equals("F"))
+                binding.view.setVisibility(View.INVISIBLE);
 
             ZonedDateTime zonedDateTime = dataNotificacao.atZone(ZoneId.systemDefault());
             long notificationTime = zonedDateTime.toInstant().toEpochMilli();
@@ -71,9 +93,9 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
                 long days = TimeUnit.MILLISECONDS.toDays(diffInMillis);
                 binding.txtTempo.setText(days + "d");
             } else {
-                // 7 dias ou mais: mostrar em semanas (ex.: "1w")
+                // 7 dias ou mais: mostrar em semanas (ex.: "1sem")
                 long weeks = diffInMillis / (7L * 24 * 60 * 60 * 1000);
-                binding.txtTempo.setText(weeks + "w");
+                binding.txtTempo.setText(weeks + "sem");
             }
         }
     }
@@ -88,12 +110,63 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
 
     @Override
     public void onBindViewHolder(@NonNull NotificacaoAdapter.ViewHolder holder, int position) {
-        Notificacao notificacao = notificacaos.get(position); // Obtém o objeto Notificacao
+        Notificacao notificacao = notificacoes.get(position);
+        holder.binding.view.setVisibility(View.INVISIBLE);
         holder.bind(notificacao);
+        visualiarNotificacao(notificacao.getCdNotificacao());
+        exibirNotificacao(holder, notificacao);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return notificacoes.size();
+    }
+
+    public void updateList(List<Notificacao> novaLista) {
+        this.notificacoes = novaLista;
+        notifyDataSetChanged();
+    }
+
+    private void visualiarNotificacao(String cdNotificacao) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", credentials)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        String url = "https://ms-aion-mongodb.onrender.com";
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceAPI_NOSQL serviceAPI_NOSQL = retrofit.create(ServiceAPI_NOSQL.class);
+        serviceAPI_NOSQL.atualizarNotificacao(cdNotificacao, "F").enqueue(new Callback<Notificacao>() {
+            @Override
+            public void onResponse(Call<Notificacao> call, Response<Notificacao> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(activity, "Notificação visualizada.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Notificacao> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(activity, "Erro ao visualizar notificação.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void exibirNotificacao(NotificacaoAdapter.ViewHolder holder, Notificacao notificacao) {
         holder.itemView.setOnClickListener(v -> {
             BottomSheetNotificacaoBinding binding = BottomSheetNotificacaoBinding.inflate(LayoutInflater.from(v.getContext()));
             Dialog dialog = new Dialog(activity);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // Primeiro, configura o feature
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             dialog.setContentView(binding.getRoot());
 
@@ -101,35 +174,15 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
             if (window != null) {
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                window.setWindowAnimations(R.style.DialogAnimation);
                 WindowManager.LayoutParams params = window.getAttributes();
                 params.gravity = Gravity.BOTTOM;
                 window.setAttributes(params);
             }
 
-            // Preencher os dados
             binding.txtNmRemetente.setText(notificacao.getTitulo() != null ? notificacao.getTitulo() : "Desconhecido");
             binding.txtConteudoCompleto.setText(notificacao.getDescricao() != null && !notificacao.getDescricao().isBlank() ? notificacao.getDescricao() : "Sem conteúdo");
-            if (notificacao.getData() != null) {
-                Date date = Date.from(notificacao.getData().atZone(ZoneId.systemDefault()).toInstant());
-                String formatada = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(date);
-                binding.txtTempo2.setText(formatada);
-            } else {
-                binding.txtTempo2.setText("N/A");
-            }
-
 
             dialog.show();
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return notificacaos.size();
-    }
-
-    public void updateList(List<Notificacao> novaLista) {
-        this.notificacaos = novaLista;
-        notifyDataSetChanged(); // substituir futuramente por DiffUtil para maior performance
     }
 }

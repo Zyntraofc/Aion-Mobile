@@ -104,7 +104,7 @@ public class NotificacaoActivity extends AppCompatActivity {
     private void getNotificacaoByUser(Long id) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
