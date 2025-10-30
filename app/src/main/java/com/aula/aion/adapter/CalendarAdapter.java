@@ -19,6 +19,11 @@ import java.util.Map;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder> {
 
+    public interface OnDayClickListener {
+        void onTodayClick();
+        void onAbsentDayClick(LocalDate date, RelatorioPresenca presenca);
+    }
+
     public static class CalendarDay {
         private String dayText;
         private boolean isCurrentMonth;
@@ -46,6 +51,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
     private final List<CalendarDay> daysOfMonth;
     private final Context context;
     private final Map<LocalDate, RelatorioPresenca> presencaMap;
+    private OnDayClickListener clickListener;
 
     public CalendarAdapter(Context context, List<CalendarDay> daysOfMonth, List<RelatorioPresenca> relatorioPresenca) {
         this.context = context;
@@ -58,6 +64,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
                 presencaMap.put(relatorio.getDataDia(), relatorio);
             }
         }
+    }
+
+    public void setOnDayClickListener(OnDayClickListener listener) {
+        this.clickListener = listener;
     }
 
     @NonNull
@@ -76,22 +86,43 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
             // Escurecer os dias do mês anterior/seguinte
             holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_default);
             holder.dayTextView.setTextColor(context.getResources().getColor(R.color.light_gray));
+            holder.itemView.setOnClickListener(null);
         } else {
             holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_default);
             holder.dayTextView.setTextColor(context.getResources().getColor(R.color.black));
 
             if (day.getDataDia().isEqual(LocalDate.now())) {
+                // Dia de hoje - fundo roxo
                 holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_purple_fill);
                 holder.dayTextView.setTextColor(context.getResources().getColor(android.R.color.white));
+
+                // Clique no dia de hoje - abre BottomSheet
+                holder.itemView.setOnClickListener(v -> {
+                    if (clickListener != null) {
+                        clickListener.onTodayClick();
+                    }
+                });
             } else {
                 RelatorioPresenca presenca = presencaMap.get(day.getDataDia());
                 if (presenca != null) {
                     applyStatusStyle(holder, presenca.getStatusDia());
+
+                    // Clique em dias com status vermelho (4) ou amarelo (3)
+                    if (presenca.getStatusDia() == 3 || presenca.getStatusDia() == 4) {
+                        holder.itemView.setOnClickListener(v -> {
+                            if (clickListener != null) {
+                                clickListener.onAbsentDayClick(day.getDataDia(), presenca);
+                            }
+                        });
+                    } else {
+                        holder.itemView.setOnClickListener(null);
+                    }
+                } else {
+                    holder.itemView.setOnClickListener(null);
                 }
             }
         }
     }
-
 
     private void applyStatusStyle(@NonNull CalendarViewHolder holder, Integer statusDia) {
         if (statusDia == null) {
@@ -99,21 +130,21 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.Calend
         }
 
         switch (statusDia) {
-            case 2: // Presença
-                holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_purple_fill);
-                holder.dayTextView.setTextColor(context.getResources().getColor(android.R.color.white));
-                break;
-            case 3: // Parcial
-                holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_red_outline);
-                holder.dayTextView.setTextColor(context.getResources().getColor(R.color.black));
-                break;
-            case 4: // Ausente
-                holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_red_outline);
-                holder.dayTextView.setTextColor(context.getResources().getColor(R.color.black));
-                break;
-            default: // Fim de semana ou outro
+            case 1: // Faltou
                 holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_default);
                 holder.dayTextView.setTextColor(context.getResources().getColor(R.color.text_gray));
+                break;
+            case 2: // Presença
+                holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_green_outline);
+                holder.dayTextView.setTextColor(context.getResources().getColor(R.color.black));
+                break;
+            case 3: // Parcial (Amarelo)
+                holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_yellow_outline);
+                holder.dayTextView.setTextColor(context.getResources().getColor(R.color.black));
+                break;
+            case 4: // Ausente (Vermelho)
+                holder.dayTextView.setBackgroundResource(R.drawable.calendar_day_red_outline);
+                holder.dayTextView.setTextColor(context.getResources().getColor(R.color.black));
                 break;
         }
     }
