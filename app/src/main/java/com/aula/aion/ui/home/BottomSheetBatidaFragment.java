@@ -25,9 +25,11 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
@@ -37,12 +39,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
 
     private BottomSheetBatidaBinding binding;
     private Retrofit retrofit;
-    private Funcionario funcionario; // <-- objeto que você passa no bundle
+    private Funcionario funcionario;
 
     @Nullable
     @Override
@@ -66,7 +69,9 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        String dataAtual = new SimpleDateFormat("dd/MM").format(new Date());
         binding.txtHoraAtual.setText(mostrarHoraAtualFormatada());
+        binding.textView6.setText(dataAtual);
 
         if (funcionario != null) {
             // usa o nome do funcionário
@@ -120,10 +125,10 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
 
     private void baterPonto() {
         if (funcionario != null) {
-            // Configura o cliente com autenticação básica
+
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(chain -> {
-                        String credentials = Credentials.basic("admin", "123456");
+                        String credentials = Credentials.basic("colaborador", "colaboradorpass");
                         Request request = chain.request().newBuilder()
                                 .addHeader("Authorization", credentials)
                                 .build();
@@ -131,32 +136,41 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
                     })
                     .build();
 
-            String url = "https://ms-aion-jpa.onrender.com";
+            String url = "https://ms-aion-jpa.onrender.com/";
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .client(client)
+                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
 
-            Batida batida = new Batida(LocalDateTime.now().toString(), "", funcionario.getCdMatricula(), "1", "0");
+            Batida batida = new Batida(
+                    LocalDateTime.now().toString(),
+                    null,
+                    funcionario.getCdMatricula(),
+                    "1",
+                    "0",
+                    null
+            );
 
-            serviceAPI_SQL.inserirBatida(batida).enqueue(new Callback<Batida>() {
+            serviceAPI_SQL.inserirBatida(batida).enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<Batida> call, Response<Batida> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     Log.d("API", "Chamada da API realizada");
                     Log.d("API", "Status code: " + response.code());
 
                     if (response.isSuccessful() && response.body() != null) {
-                        Batida batidaResponse = response.body();
-                        Log.d("API", "Batida registrada: " + batidaResponse.getDataHoraBatida());
+                        String batidaResponse = response.body();
+                        Log.d("API", "Batida registrada: " + batidaResponse);
 
-                        Toast.makeText(requireContext(), "Batida registrada com sucesso!", Toast.LENGTH_SHORT).show();
-                        binding.txtConfitmarBatida.setText("Batida Registrada!");
+                        Toast.makeText(requireContext(), batidaResponse, Toast.LENGTH_SHORT).show();
+                        binding.txtConfitmarBatida.setText(batidaResponse);
                         binding.btnBaterPonto.setEnabled(false);
                         binding.btnBaterPonto.postDelayed(() -> dismiss(), 2000);
+
                     } else {
                         try {
                             Log.e("API", "Erro body: " +
@@ -164,6 +178,7 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
                         } catch (IOException e) {
                             Log.e("API", "Erro ao ler o erro body", e);
                         }
+
                         Toast.makeText(requireContext(),
                                 "Erro ao registrar batida: " + response.code(),
                                 Toast.LENGTH_SHORT).show();
@@ -171,7 +186,7 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
                 }
 
                 @Override
-                public void onFailure(Call<Batida> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     Log.e("API", "Erro na chamada da API: " + t.getMessage(), t);
                     Toast.makeText(requireContext(), "Falha na comunicação com o servidor!", Toast.LENGTH_SHORT).show();
                     binding.txtHoraAtual.setText("Ocorreu um erro!");
