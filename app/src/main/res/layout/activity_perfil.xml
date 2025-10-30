@@ -34,16 +34,20 @@
 
 
                 <!-- Avatar e informações -->
+
                 <ImageView
                     android:id="@+id/img_fotoPerfil"
                     android:layout_width="128dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="128dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="100dp"
                     android:contentDescription="@string/desc_fotoPerfil"
+                    android:src="@drawable/ic_usericon"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="@color/aqua_tertiary"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_usericon"  />
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <TextView
                     android:id="@+id/txt_cargo"
@@ -133,6 +137,7 @@
                         android:padding="10dp">
 
                         <LinearLayout
+                            android:id="@+id/container_desempenho"
                             android:layout_width="match_parent"
                             android:layout_height="57dp"
                             android:gravity="center_vertical"
@@ -150,6 +155,7 @@
                                 android:textSize="13sp" />
 
                             <ImageView
+                                android:id="@+id/btn_desempenho"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
                                 android:background="@drawable/round_backgroud_buttons_perfil"
@@ -166,6 +172,7 @@
                             android:background="#EEEEEE" />
 
                         <LinearLayout
+                            android:id="@+id/container_notificacao"
                             android:layout_width="match_parent"
                             android:layout_height="57dp"
                             android:gravity="center_vertical"
@@ -183,6 +190,7 @@
                                 android:textSize="13sp" />
 
                             <ImageView
+                                android:id="@+id/btn_notificacao"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
                                 android:background="@drawable/round_backgroud_buttons_perfil"
