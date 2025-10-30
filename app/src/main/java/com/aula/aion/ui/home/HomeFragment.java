@@ -6,22 +6,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aula.aion.Inicio;
 import com.aula.aion.R;
 import com.aula.aion.adapter.CalendarAdapter;
+import com.aula.aion.api.ServiceAPI_NOSQL;
 import com.aula.aion.api.ServiceAPI_SQL;
+import com.aula.aion.databinding.ActivityInicioBinding;
 import com.aula.aion.databinding.FragmentHomeBinding;
+import com.aula.aion.model.EnviaSinal;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.RelatorioPresenca;
+import com.aula.aion.sinal.EnviaSinalMethod;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +40,8 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -57,7 +66,8 @@ public class HomeFragment extends Fragment {
     private Calendar currentCalendar;
     private FragmentHomeBinding binding;
     private List<RelatorioPresenca> relatorioPresencaList;
-
+    private int diasUteisNoMes = 0;
+    private Funcionario funcionario;
     // Construtor público vazio necessário
     public HomeFragment() {}
 
@@ -70,6 +80,10 @@ public class HomeFragment extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
+
+        // Calcular dias úteis do mês atual
+        calcularDiasUteisDoMes();
+
         chamaAPI_GetByEmail(email, view);
 
         monthYearTextView = view.findViewById(R.id.monthYearTextView);
@@ -89,8 +103,23 @@ public class HomeFragment extends Fragment {
             currentCalendar.add(Calendar.MONTH, 1);
             setupCalendar();
         });
-
         return view;
+    }
+
+    private void calcularDiasUteisDoMes() {
+        YearMonth mesAtual = YearMonth.now();
+        int diasNoMes = mesAtual.lengthOfMonth();
+        diasUteisNoMes = 0;
+
+        for (int dia = 1; dia <= diasNoMes; dia++) {
+            LocalDate data = mesAtual.atDay(dia);
+            // Contar apenas dias úteis (segunda a sexta)
+            if (data.getDayOfWeek().getValue() >= 1 && data.getDayOfWeek().getValue() <= 5) {
+                diasUteisNoMes++;
+            }
+        }
+
+        Log.d("API", "Dias úteis no mês: " + diasUteisNoMes);
     }
 
     private void setupCalendar() {
@@ -167,6 +196,36 @@ public class HomeFragment extends Fragment {
 
         // Criar e configurar o adapter com a lista de relatórios
         calendarAdapter = new CalendarAdapter(getContext(), days, relatorioPresencaList);
+
+        // Configurar o listener de cliques
+        calendarAdapter.setOnDayClickListener(new CalendarAdapter.OnDayClickListener() {
+            @Override
+            public void onTodayClick() {
+                // Abre o BottomSheet para o dia de hoje
+                if (funcionario != null) {
+                    BottomSheetBatidaFragment bottomSheet = new BottomSheetBatidaFragment();
+                    Bundle args = new Bundle();
+                    args.putSerializable("funcionario", funcionario);
+                    bottomSheet.setArguments(args);
+                    bottomSheet.show(getChildFragmentManager(), bottomSheet.getTag());
+                } else {
+                    Toast.makeText(getContext(), "Carregando dados do funcionário...", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onAbsentDayClick(LocalDate date, RelatorioPresenca presenca) {
+                Bundle args = new Bundle();
+                args.putSerializable("data", date);
+                args.putSerializable("presenca", presenca);
+                args.putBoolean("fromCalendar", true);
+
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+                navController.navigate(R.id.nav_justificativa, args);
+            }
+
+        });
+
         calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
@@ -176,7 +235,7 @@ public class HomeFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
@@ -200,12 +259,18 @@ public class HomeFragment extends Fragment {
                     Log.d("chamaAPI_GetByEmail", "Resposta da API: " + response);
                     Funcionario funcionarioRetorno = response.body();
                     if (funcionarioRetorno != null) {
+                        // Armazenar o funcionário na variável de instância
+                        funcionario = funcionarioRetorno;
+
                         TextView txtBemVindo = view.findViewById(R.id.txtBemVindo);
                         txtBemVindo.setText("Olá, " + funcionarioRetorno.getNomeCompleto());
+                        verificaExisteNotificacao(funcionarioRetorno.getCdMatricula());
                         Log.d("VER DATA", funcionarioRetorno.getNascimento());
                         Inicio activity = (Inicio) getActivity();
                         if (activity != null) {
                             activity.setFuncionario(funcionarioRetorno);
+                            EnviaSinalMethod enviaSinalMethod = new EnviaSinalMethod();
+                            enviaSinalMethod.enviaSinal(funcionario.getCdMatricula());
                         }
                         getRelatorioPresencas(funcionarioRetorno.getCdMatricula(), view);
                     }
@@ -223,7 +288,7 @@ public class HomeFragment extends Fragment {
     private void getRelatorioPresencas(Long id, View view) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
@@ -310,18 +375,89 @@ public class HomeFragment extends Fragment {
 
         for (RelatorioPresenca relatorio : relatorioPresenca) {
             switch (relatorio.getStatusDia()) {
+                case 1: finalSemana++; break;
                 case 2: presenca++; break;
-                case 4: ausente++; break;
                 case 3: parcial++; break;
-                default: finalSemana++; break;
+                case 4: ausente++; break;
             }
         }
 
-        TextView txtNumFalta = view.findViewById(R.id.txt_num_falta);
-        TextView txtNumPresenca = view.findViewById(R.id.txt_num_presenca);
-        txtNumPresenca.setText(String.valueOf(presenca));
-        txtNumFalta.setText(String.valueOf(ausente));
+        // Atualizar UI
+        atualizarUIFaltas(ausente, view);
+        atualizarUIPresencas(presenca, view);
 
         setupCalendar();
+    }
+
+    private void atualizarUIFaltas(int totalFaltas, View view) {
+        TextView txtNumFalta = view.findViewById(R.id.txt_num_falta);
+        TextView txtProgressoFalta = view.findViewById(R.id.txt_progresso_vistas);
+        ProgressBar progressFaltas = view.findViewById(R.id.progress_faltas);
+
+        txtNumFalta.setText(String.valueOf(totalFaltas));
+        txtProgressoFalta.setText(totalFaltas + "/" + diasUteisNoMes);
+
+        // Calcular porcentagem de faltas
+        int progressFaltasPercent = diasUteisNoMes > 0 ? (int) ((totalFaltas / (float) diasUteisNoMes) * 100) : 0;
+        progressFaltas.setProgress(progressFaltasPercent);
+
+        Log.d("API", "Faltas: " + totalFaltas + "/" + diasUteisNoMes + " = " + progressFaltasPercent + "%");
+    }
+
+    private void atualizarUIPresencas(int totalPresencas, View view) {
+        TextView txtNumPresenca = view.findViewById(R.id.txt_num_presenca);
+        TextView txtProgressoPresenca = view.findViewById(R.id.txt_progresso_presenca);
+        ProgressBar progressPresencas = view.findViewById(R.id.progress_presencas);
+
+        txtNumPresenca.setText(String.valueOf(totalPresencas));
+        txtProgressoPresenca.setText(totalPresencas + "/" + diasUteisNoMes);
+
+        // Calcular porcentagem de presenças
+        int progressPresencasPercent = diasUteisNoMes > 0 ? (int) ((totalPresencas / (float) diasUteisNoMes) * 100) : 0;
+        progressPresencas.setProgress(progressPresencasPercent);
+
+        Log.d("API", "Presenças: " + totalPresencas + "/" + diasUteisNoMes + " = " + progressPresencasPercent + "%");
+    }
+
+    private void verificaExisteNotificacao(Long id) {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
+                    Request request = chain.request().newBuilder()
+                            .addHeader("Authorization", credentials)
+                            .build();
+                    return chain.proceed(request);
+                })
+                .build();
+
+        String url = "https://ms-aion-mongodb.onrender.com";
+        retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceAPI_NOSQL serviceAPI_NOSQL = retrofit.create(ServiceAPI_NOSQL.class);
+
+        serviceAPI_NOSQL.contarNotificacao(id, "A").enqueue(new Callback<java.lang.Integer>() {
+            @Override
+            public void onResponse(Call<java.lang.Integer> call, Response<java.lang.Integer> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int count = response.body();
+                    Log.d("API", "Quantidade de notificações: " + count);
+                    if (count > 0) {
+                        Inicio activity = (Inicio) getActivity();
+                        if (activity != null && activity.getBinding() != null) {
+                            activity.getBinding().aionNavBar.notificacao.setImageResource(R.drawable.ic_notificacao);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<java.lang.Integer> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 }
