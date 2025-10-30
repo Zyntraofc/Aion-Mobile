@@ -1,14 +1,24 @@
 package com.aula.aion.adapter;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aula.aion.R;
 import com.aula.aion.api.ServiceAPI_SQL;
+import com.aula.aion.databinding.BottomSheetNotificacaoBinding;
 import com.aula.aion.databinding.ItemReclamacaoBinding;
+import com.aula.aion.model.Notificacao;
 import com.aula.aion.model.TpReclamacao;
 import com.aula.aion.model.Reclamacao;
 
@@ -27,10 +37,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ReclamacaoAdapter extends RecyclerView.Adapter<ReclamacaoAdapter.ViewHolder> {
     private List<Reclamacao> reclamacaos;
     private Retrofit retrofit;
+    private Activity activity;
 
 
-    public ReclamacaoAdapter(List<Reclamacao> reclamacaos) {
+    public ReclamacaoAdapter(List<Reclamacao> reclamacaos, Activity activity) {
         this.reclamacaos = reclamacaos;
+        this.activity = activity;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -44,6 +56,7 @@ public class ReclamacaoAdapter extends RecyclerView.Adapter<ReclamacaoAdapter.Vi
         public void bind(Reclamacao reclamacao) {
             buscarTpReclamacao(reclamacao.getCdTpReclamacao(), binding);
             binding.dataTextView.setText(reclamacao.getReclamacao().format(DateTimeFormatter.ofPattern("dd/MM")));
+            setarStatus(reclamacao.getStatus(), binding);
         }
     }
 
@@ -57,7 +70,37 @@ public class ReclamacaoAdapter extends RecyclerView.Adapter<ReclamacaoAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ReclamacaoAdapter.ViewHolder holder, int position) {
-        holder.bind(reclamacaos.get(position));
+        Reclamacao reclamacao = reclamacaos.get(position);
+        holder.bind(reclamacao);
+        holder.itemView.setOnClickListener(v -> {
+            BottomSheetNotificacaoBinding binding = BottomSheetNotificacaoBinding.inflate(LayoutInflater.from(v.getContext()));
+            Dialog dialog = new Dialog(activity);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            dialog.setContentView(binding.getRoot());
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                window.setWindowAnimations(R.style.DialogAnimation);
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.gravity = Gravity.BOTTOM;
+                window.setAttributes(params);
+            }
+            String resposta = null;
+            // Preencher os dados
+            binding.txtNmRemetente.setText("RH");
+            if (reclamacao.getResposta() != null && !reclamacao.getStatus().equals("C"))
+                resposta = reclamacao.getResposta();
+            else if (reclamacao.getStatus().equals("E"))
+                resposta = "Sua reclamação foi visualizada pelo RH.";
+            else if (reclamacao.getStatus().equals("A"))
+                resposta = "O RH ainda não enviou uma resposta para essa reclamação.";
+            binding.txtConteudoCompleto.setText(resposta);
+
+            dialog.show();
+        });
     }
 
     @Override
@@ -72,7 +115,7 @@ public class ReclamacaoAdapter extends RecyclerView.Adapter<ReclamacaoAdapter.Vi
     private void buscarTpReclamacao(Long cdTpReclamacao, ItemReclamacaoBinding binding) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
@@ -104,5 +147,17 @@ public class ReclamacaoAdapter extends RecyclerView.Adapter<ReclamacaoAdapter.Vi
             }
         });
 
+    }
+    private void setarStatus(String status, ItemReclamacaoBinding binding) {
+        if (status.equals("A")) {
+            binding.txtStatus.setText("Não respondido");
+            binding.imgStatus.setImageDrawable(binding.getRoot().getContext().getDrawable(R.drawable.ic_naorespondido));
+        } else if (status.equals("E")) {
+            binding.txtStatus.setText("Visto");
+            binding.imgStatus.setImageDrawable(binding.getRoot().getContext().getDrawable(R.drawable.ic_vista));
+        } else if (status.equals("C")) {
+            binding.txtStatus.setText("Respondido");
+            binding.imgStatus.setImageDrawable(binding.getRoot().getContext().getDrawable(R.drawable.ic_concluida));
+        }
     }
 }

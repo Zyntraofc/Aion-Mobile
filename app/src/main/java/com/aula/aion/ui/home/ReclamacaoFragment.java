@@ -12,15 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aula.aion.Inicio;
+import com.aula.aion.R;
 import com.aula.aion.adapter.ReclamacaoAdapter;
 import com.aula.aion.api.ServiceAPI_SQL;
-import com.aula.aion.databinding.FragmentReclamacaoBinding;
-
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.Reclamacao;
+import com.aula.aion.sinal.EnviaSinalMethod;
+import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -40,9 +43,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ReclamacaoFragment extends Fragment {
 
-    FragmentReclamacaoBinding binding;
     private Long lCdFuncionario;
     private ReclamacaoAdapter adapter;
+
+    // Views
+    private MaterialButton btnReclamar;
+    private TextView txtVista;
+    private TextView txtRespondidas;
+    private TextView txtProgressoVistas;
+    private TextView txtProgressoRespondidas;
+    private ProgressBar progressVistas;
+    private ProgressBar progressRespondidas;
+    private RecyclerView reclamacaoRecyclerView;
 
     public ReclamacaoFragment(){}
 
@@ -50,18 +62,22 @@ public class ReclamacaoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        // ✅ Usa somente o binding (sem inflar outro layout)
-        binding = FragmentReclamacaoBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_reclamacao, container, false);
 
-        // ✅ Configura o RecyclerView corretamente
-        RecyclerView recyclerView = binding.reclamacaoRecyclerView;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ReclamacaoAdapter(new ArrayList<>());
-        recyclerView.setAdapter(adapter);
+        btnReclamar = view.findViewById(R.id.btn_reclamar);
+        txtVista = view.findViewById(R.id.txt_vista);
+        txtRespondidas = view.findViewById(R.id.txt_respondidas);
+        txtProgressoVistas = view.findViewById(R.id.txt_progresso_vistas);
+        txtProgressoRespondidas = view.findViewById(R.id.txt_progresso_respondidas);
+        progressVistas = view.findViewById(R.id.progress_vistas);
+        progressRespondidas = view.findViewById(R.id.progress_respondidas);
+        reclamacaoRecyclerView = view.findViewById(R.id.reclamacaoRecyclerView);
 
-        // ✅ Recupera o funcionário da Activity, se existir
+        reclamacaoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Inicio activity = (Inicio) getActivity();
+        adapter = new ReclamacaoAdapter(new ArrayList<>(), activity);
+        reclamacaoRecyclerView.setAdapter(adapter);
+
         if (activity != null) {
             Funcionario funcionario = activity.getFuncionario();
             if (funcionario != null) {
@@ -70,8 +86,10 @@ public class ReclamacaoFragment extends Fragment {
             }
         }
 
-        // ✅ Botão de reclamação — mantido igual ao seu
-        binding.btnReclamar.setOnClickListener(view1 -> {
+        EnviaSinalMethod enviaSinalMethod = new EnviaSinalMethod();
+        enviaSinalMethod.enviaSinal(lCdFuncionario);
+
+        btnReclamar.setOnClickListener(view1 -> {
             Bundle bundle = new Bundle();
             bundle.putLong("lCdFuncionario", lCdFuncionario);
 
@@ -92,7 +110,7 @@ public class ReclamacaoFragment extends Fragment {
     private void getReclamacaoByUser(Long id) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
@@ -126,8 +144,7 @@ public class ReclamacaoFragment extends Fragment {
                     List<Reclamacao> reclamacoes = response.body();
                     Log.d("API", "Reclamações recebidas: " + reclamacoes.size());
 
-                    // Atualizar apenas a lista do adapter existente
-                    adapter.updateList(reclamacoes);
+                    processaListaReclamacoes(reclamacoes);
                 } else {
                     Log.e("API", "Erro na resposta: " + response.code());
 
@@ -150,7 +167,6 @@ public class ReclamacaoFragment extends Fragment {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<List<Reclamacao>> call, Throwable t) {
                 Log.e("API", "Erro na chamada: " + t.getMessage(), t);
@@ -166,9 +182,42 @@ public class ReclamacaoFragment extends Fragment {
         });
     }
 
+    private void processaListaReclamacoes(List<Reclamacao> reclamacoes) {
+        int respondidas = 0;
+        int vistas = 0;
+        int size = reclamacoes.size();
+
+        for (Reclamacao reclamacao : reclamacoes) {
+            if (reclamacao.getStatus().equals("C")) respondidas++;
+            if (reclamacao.getStatus().equals("E")) vistas++;
+        }
+
+        txtVista.setText(String.valueOf(vistas));
+        txtRespondidas.setText(String.valueOf(respondidas));
+
+        int percentualVistas = size > 0 ? (int) ((vistas / (float) size) * 100) : 0;
+        int percentualRespondidas = size > 0 ? (int) ((respondidas / (float) size) * 100) : 0;
+
+        progressRespondidas.setProgress(percentualRespondidas);
+        progressVistas.setProgress(percentualVistas);
+
+        txtProgressoRespondidas.setText(respondidas + "/" + size);
+        txtProgressoVistas.setText(vistas + "/" + size);
+
+        adapter.updateList(reclamacoes);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        // Limpar referências das views
+        btnReclamar = null;
+        txtVista = null;
+        txtRespondidas = null;
+        txtProgressoVistas = null;
+        txtProgressoRespondidas = null;
+        progressVistas = null;
+        progressRespondidas = null;
+        reclamacaoRecyclerView = null;
     }
 }
