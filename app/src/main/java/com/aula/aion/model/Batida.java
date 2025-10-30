@@ -8,14 +8,16 @@ public class Batida {
     private Long cdFuncionario;
     private String status;
     private String situacao;
+    private Long cdMotivoFalta;
 
 
-    public Batida(String dataHoraBatida, String justificativa, Long cdFuncionario, String status, String situacao) {
+    public Batida(String dataHoraBatida, String justificativa, Long cdFuncionario, String status, String situacao, Long cdMotivo) {
         this.dataHoraBatida = dataHoraBatida;
         this.justificativa = justificativa;
         this.cdFuncionario = cdFuncionario;
         this.status = status;
         this.situacao = situacao;
+        this.cdMotivoFalta = cdMotivo;
     }
 
     public String getDataHoraBatida() {
@@ -56,5 +58,13 @@ public class Batida {
 
     public void setSituacao(String situacao) {
         this.situacao = situacao;
+    }
+
+    public Long getCdMotivoFalta() {
+        return cdMotivoFalta;
+    }
+
+    public void setCdMotivoFalta(Long cdMotivoFalta) {
+        this.cdMotivoFalta = cdMotivoFalta;
     }
 }
