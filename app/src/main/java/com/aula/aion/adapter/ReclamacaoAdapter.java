@@ -18,7 +18,6 @@ import com.aula.aion.R;
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.BottomSheetNotificacaoBinding;
 import com.aula.aion.databinding.ItemReclamacaoBinding;
-import com.aula.aion.model.Notificacao;
 import com.aula.aion.model.TpReclamacao;
 import com.aula.aion.model.Reclamacao;
 

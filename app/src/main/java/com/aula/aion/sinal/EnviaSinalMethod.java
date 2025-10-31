@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,7 +19,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EnviaSinalMethod {
     private Retrofit retrofit;
+
     public void enviaSinal(Long cdUsuario) {
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("colaborador", "colaboradorpass");
@@ -29,28 +32,43 @@ public class EnviaSinalMethod {
                 })
                 .build();
 
-        String url = "https://ms-aion-jpa.onrender.com";
+        String url = "https://ms-aion-jpa.onrender.com/";
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        EnviaSinal enviaSinal = new EnviaSinal(cdUsuario, "APP", LocalDateTime.now());
+        String dataAtual = LocalDateTime.now().toString();
+        EnviaSinal enviaSinal = new EnviaSinal(cdUsuario, "mobile", dataAtual);
 
         ServiceAPI_SQL serviceAPI_SQL = retrofit.create(ServiceAPI_SQL.class);
-        serviceAPI_SQL.enviarSinal(enviaSinal).enqueue(new Callback<EnviaSinal>() {
+        serviceAPI_SQL.enviarSinal(enviaSinal).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<EnviaSinal> call, Response<EnviaSinal> response) {
-                // Não é necessário lidar com a resposta aqui somente registrar o sinal
-                Log.d("enviaSinal", "Sinal enviado com sucesso!");
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String body = response.body() != null ? response.body().string() : "vazio";
+                        Log.d("enviaSinal", "Sinal enviado com sucesso: " + body);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        Log.e("enviaSinal", "Erro: " + response.code() + " - " + response.errorBody().string());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override
-            public void onFailure(Call<EnviaSinal> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-                Log.d("enviaSinal", "Erro ao enviar o sinal");            }
+                Log.e("enviaSinal", "Falha ao enviar sinal: " + t.getMessage());
+            }
         });
-    }
 
+    }
 }

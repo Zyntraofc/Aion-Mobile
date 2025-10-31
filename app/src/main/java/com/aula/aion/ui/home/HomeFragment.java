@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,9 +22,7 @@ import com.aula.aion.R;
 import com.aula.aion.adapter.CalendarAdapter;
 import com.aula.aion.api.ServiceAPI_NOSQL;
 import com.aula.aion.api.ServiceAPI_SQL;
-import com.aula.aion.databinding.ActivityInicioBinding;
 import com.aula.aion.databinding.FragmentHomeBinding;
-import com.aula.aion.model.EnviaSinal;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.RelatorioPresenca;
 import com.aula.aion.sinal.EnviaSinalMethod;
@@ -40,7 +37,6 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,21 +71,24 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        View view = binding.getRoot();
 
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
 
-        // Calcular dias úteis do mês atual
+        // Calcula os dias úteis
         calcularDiasUteisDoMes();
 
-        chamaAPI_GetByEmail(email, view);
+        // Executa chamada da API
+        chamaAPI_GetByEmail(email);
 
-        monthYearTextView = view.findViewById(R.id.monthYearTextView);
-        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
-        ImageButton previousMonthButton = view.findViewById(R.id.previousMonthButton);
-        ImageButton nextMonthButton = view.findViewById(R.id.nextMonthButton);
+        // CONFIGURAÇÕES DO CALENDÁRIO
+        monthYearTextView = binding.monthYearTextView;
+        calendarRecyclerView = binding.calendarRecyclerView;
+        ImageButton previousMonthButton = binding.previousMonthButton;
+        ImageButton nextMonthButton = binding.nextMonthButton;
 
         currentCalendar = Calendar.getInstance();
         relatorioPresencaList = new ArrayList<>();
@@ -103,8 +102,10 @@ public class HomeFragment extends Fragment {
             currentCalendar.add(Calendar.MONTH, 1);
             setupCalendar();
         });
+
         return view;
     }
+
 
     private void calcularDiasUteisDoMes() {
         YearMonth mesAtual = YearMonth.now();
@@ -197,6 +198,7 @@ public class HomeFragment extends Fragment {
         // Criar e configurar o adapter com a lista de relatórios
         calendarAdapter = new CalendarAdapter(getContext(), days, relatorioPresencaList);
 
+
         // Configurar o listener de cliques
         calendarAdapter.setOnDayClickListener(new CalendarAdapter.OnDayClickListener() {
             @Override
@@ -225,12 +227,11 @@ public class HomeFragment extends Fragment {
             }
 
         });
-
         calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
 
-    private void chamaAPI_GetByEmail(String email, View view) {
+    private void chamaAPI_GetByEmail(String email) {
         Log.d("chamaAPI_GetByEmail", "Chamando API com email: " + email);
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -262,8 +263,7 @@ public class HomeFragment extends Fragment {
                         // Armazenar o funcionário na variável de instância
                         funcionario = funcionarioRetorno;
 
-                        TextView txtBemVindo = view.findViewById(R.id.txtBemVindo);
-                        txtBemVindo.setText("Olá, " + funcionarioRetorno.getNomeCompleto());
+                        binding.txtBemVindo.setText("Olá, " + funcionarioRetorno.getNomeCompleto());
                         verificaExisteNotificacao(funcionarioRetorno.getCdMatricula());
                         Log.d("VER DATA", funcionarioRetorno.getNascimento());
                         Inicio activity = (Inicio) getActivity();
@@ -272,7 +272,7 @@ public class HomeFragment extends Fragment {
                             EnviaSinalMethod enviaSinalMethod = new EnviaSinalMethod();
                             enviaSinalMethod.enviaSinal(funcionario.getCdMatricula());
                         }
-                        getRelatorioPresencas(funcionarioRetorno.getCdMatricula(), view);
+                        getRelatorioPresencas(funcionarioRetorno.getCdMatricula());
                     }
                 }
             }
@@ -285,7 +285,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void getRelatorioPresencas(Long id, View view) {
+    private void getRelatorioPresencas(Long id) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("colaborador", "colaboradorpass");
@@ -325,7 +325,9 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Log.d("API", "Sucesso na resposta: " + response.body());
                     List<RelatorioPresenca> relatorio = response.body();
-                    processaRelatorioPresenca(relatorio, view);
+                    processaRelatorioPresenca(relatorio);
+                    binding.progressBar.setVisibility(View.INVISIBLE);
+                    binding.progressBar.setEnabled(false);
                 } else {
                     Log.e("API", "Erro na resposta: " + response.code());
                     try {
@@ -362,7 +364,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void processaRelatorioPresenca(List<RelatorioPresenca> relatorioPresenca, View view) {
+    private void processaRelatorioPresenca(List<RelatorioPresenca> relatorioPresenca) {
         Log.d("API", "processaRelatorioPresenca: " + relatorioPresenca.size());
 
         // Armazenar a lista de relatórios para uso no calendário
@@ -383,38 +385,30 @@ public class HomeFragment extends Fragment {
         }
 
         // Atualizar UI
-        atualizarUIFaltas(ausente, view);
-        atualizarUIPresencas(presenca, view);
+        atualizarUIFaltas(ausente);
+        atualizarUIPresencas(presenca);
 
         setupCalendar();
     }
 
-    private void atualizarUIFaltas(int totalFaltas, View view) {
-        TextView txtNumFalta = view.findViewById(R.id.txt_num_falta);
-        TextView txtProgressoFalta = view.findViewById(R.id.txt_progresso_vistas);
-        ProgressBar progressFaltas = view.findViewById(R.id.progress_faltas);
-
-        txtNumFalta.setText(String.valueOf(totalFaltas));
-        txtProgressoFalta.setText(totalFaltas + "/" + diasUteisNoMes);
+    private void atualizarUIFaltas(int totalFaltas) {
+        binding.txtNumFalta.setText(String.valueOf(totalFaltas));
+        binding.txtProgressoVistas.setText(totalFaltas + "/" + diasUteisNoMes);
 
         // Calcular porcentagem de faltas
         int progressFaltasPercent = diasUteisNoMes > 0 ? (int) ((totalFaltas / (float) diasUteisNoMes) * 100) : 0;
-        progressFaltas.setProgress(progressFaltasPercent);
+        binding.progressFaltas.setProgress(progressFaltasPercent);
 
         Log.d("API", "Faltas: " + totalFaltas + "/" + diasUteisNoMes + " = " + progressFaltasPercent + "%");
     }
 
-    private void atualizarUIPresencas(int totalPresencas, View view) {
-        TextView txtNumPresenca = view.findViewById(R.id.txt_num_presenca);
-        TextView txtProgressoPresenca = view.findViewById(R.id.txt_progresso_presenca);
-        ProgressBar progressPresencas = view.findViewById(R.id.progress_presencas);
-
-        txtNumPresenca.setText(String.valueOf(totalPresencas));
-        txtProgressoPresenca.setText(totalPresencas + "/" + diasUteisNoMes);
+    private void atualizarUIPresencas(int totalPresencas) {
+        binding.txtNumPresenca.setText(String.valueOf(totalPresencas));
+        binding.txtProgressoPresenca.setText(totalPresencas + "/" + diasUteisNoMes);
 
         // Calcular porcentagem de presenças
         int progressPresencasPercent = diasUteisNoMes > 0 ? (int) ((totalPresencas / (float) diasUteisNoMes) * 100) : 0;
-        progressPresencas.setProgress(progressPresencasPercent);
+        binding.progressPresencas.setProgress(progressPresencasPercent);
 
         Log.d("API", "Presenças: " + totalPresencas + "/" + diasUteisNoMes + " = " + progressPresencasPercent + "%");
     }

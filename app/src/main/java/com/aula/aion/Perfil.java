@@ -1,6 +1,7 @@
 package com.aula.aion;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Outline;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -15,10 +17,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
-import android.widget.AdapterView;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -36,12 +41,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.ActivityPerfilBinding;
+import com.aula.aion.databinding.BottomSheetNotificacaoBinding;
 import com.aula.aion.model.Cargo;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.sinal.EnviaSinalMethod;
 import com.aula.aion.ui.home.BottomSheetSairFragment;
 import com.aula.aion.ui.home.DashboardsFragments;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -73,6 +78,20 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
 
+    private final ActivityResultLauncher<String> notificacaoPermissionLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    isGranted -> {
+                        if (!isGranted) {
+                            Toast.makeText(this,
+                                    "Permissão de notificação negada",
+                                    Toast.LENGTH_SHORT).show();
+                            binding.swtNotificacoes.setChecked(false);
+                        }
+                    }
+            );
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +106,42 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
             return insets;
         });
 
+        binding.btnSuporte.setOnClickListener(view -> {
+            BottomSheetNotificacaoBinding bottomSheetNotificacaoBinding = BottomSheetNotificacaoBinding.inflate(LayoutInflater.from(view.getContext()));
+            Dialog dialog = new Dialog(view.getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            dialog.setContentView(binding.getRoot());
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.gravity = Gravity.BOTTOM;
+                window.setAttributes(params);
+            }
+            bottomSheetNotificacaoBinding.txtConteudoCompleto.setText("Para entrar em contato com o suporte, envie um e-mail para \nzyntra.ofc@gmail.com");
+        });
+
+        binding.swtNotificacoes.setChecked(possuiPermissaoNotificacao());
+
+        binding.swtNotificacoes.setOnCheckedChangeListener((isChecked) -> {
+            if (isChecked) {
+                if (!possuiPermissaoNotificacao()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        notificacaoPermissionLauncher.launch(
+                                Manifest.permission.POST_NOTIFICATIONS
+                        );
+                    }
+                } else {
+                    Toast.makeText(this, "Notificações habilitadas", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Notificações desativadas", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         funcionarioAtual = (Funcionario) getIntent().getSerializableExtra("funcionario");
         if (funcionarioAtual != null) {
             setarInformacoesFuncionario(funcionarioAtual);
@@ -94,12 +149,6 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
 
         binding.btnNotificacao.setOnClickListener(view -> {
             Intent intent = new Intent(Perfil.this, NotificacaoActivity.class);
-            intent.putExtra("funcionario", funcionarioAtual);
-            startActivity(intent);
-        });
-
-        binding.btnDesempenho.setOnClickListener(view -> {
-            Intent intent = new Intent(Perfil.this, DashboardsFragments.class);
             intent.putExtra("funcionario", funcionarioAtual);
             startActivity(intent);
         });
@@ -421,20 +470,6 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
             bottomSheetSairFragment.setLogoutCallback(this);
             bottomSheetSairFragment.show(getSupportFragmentManager(), "BottomSheetSairFragment");
         });
-
-        binding.sprIdioma.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                if (selectedItem.equals("Ingles (United States)")) {
-                    Toast.makeText(Perfil.this, "Você selecionou: " + selectedItem, Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-
         binding.perfilNavBar.btnVoltar.setOnClickListener(view -> finish());
     }
 
@@ -452,5 +487,15 @@ public class Perfil extends AppCompatActivity implements com.aula.aion.LogoutCal
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay_still);
         }
+    }
+
+    private boolean possuiPermissaoNotificacao() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED;
+        }
+        return true;
     }
 }

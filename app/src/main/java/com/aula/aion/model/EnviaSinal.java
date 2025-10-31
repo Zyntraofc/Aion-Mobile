@@ -1,13 +1,12 @@
 package com.aula.aion.model;
 
-import java.time.LocalDateTime;
 
 public class EnviaSinal {
     private Long cdUsuario;
     private String localUso;
-    private LocalDateTime dsinal;
+    private String dsinal;
 
-    public EnviaSinal(Long cdUsuario, String localUso, LocalDateTime dsinal) {
+    public EnviaSinal(Long cdUsuario, String localUso, String dsinal) {
         this.cdUsuario = cdUsuario;
         this.localUso = localUso;
         this.dsinal = dsinal;
@@ -21,11 +20,11 @@ public class EnviaSinal {
         this.cdUsuario = cdUsuario;
     }
 
-    public LocalDateTime getDsinal() {
+    public String getDsinal() {
         return dsinal;
     }
 
-    public void setDsinal(LocalDateTime dsinal) {
+    public void setDsinal(String dsinal) {
         this.dsinal = dsinal;
     }
 

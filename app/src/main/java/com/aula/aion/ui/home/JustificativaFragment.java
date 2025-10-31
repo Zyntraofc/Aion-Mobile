@@ -254,8 +254,10 @@ public class JustificativaFragment extends Fragment {
         countPendentes = lista.size();
         JustificativaAdapter adapter = new JustificativaAdapter(lista);
         justificativaRecyclerView.setAdapter(adapter);
+        ProgressBar progressBar = view.findViewById(R.id.progressJustificativa);
+        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setEnabled(false);
 
-        // Atualizar UI com os dados de faltas
         atualizarUIFaltas(totalFaltas);
     }
 

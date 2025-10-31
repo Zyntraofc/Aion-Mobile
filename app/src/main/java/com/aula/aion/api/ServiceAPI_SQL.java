@@ -13,6 +13,7 @@ import com.aula.aion.model.TpReclamacao;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -59,6 +60,6 @@ public interface ServiceAPI_SQL {
     Call<Endereco> alterarEndereco(@Path("id") Long id, @Body Endereco endereco);
 
     @POST("/api/v1/funcionario/enviar-sinal")
-    Call<EnviaSinal> enviarSinal(@Body EnviaSinal enviaSinal);
+    Call<ResponseBody> enviarSinal(@Body EnviaSinal enviaSinal);
 
 }

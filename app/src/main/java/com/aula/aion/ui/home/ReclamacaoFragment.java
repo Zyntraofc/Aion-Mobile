@@ -55,6 +55,7 @@ public class ReclamacaoFragment extends Fragment {
     private ProgressBar progressVistas;
     private ProgressBar progressRespondidas;
     private RecyclerView reclamacaoRecyclerView;
+    private ProgressBar progressBar;
 
     public ReclamacaoFragment(){}
 
@@ -72,6 +73,7 @@ public class ReclamacaoFragment extends Fragment {
         progressVistas = view.findViewById(R.id.progress_vistas);
         progressRespondidas = view.findViewById(R.id.progress_respondidas);
         reclamacaoRecyclerView = view.findViewById(R.id.reclamacaoRecyclerView);
+        progressBar = view.findViewById(R.id.progress);
 
         reclamacaoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         Inicio activity = (Inicio) getActivity();
@@ -108,6 +110,11 @@ public class ReclamacaoFragment extends Fragment {
 
 
     private void getReclamacaoByUser(Long id) {
+        // Mostrar loading
+        if (progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("colaborador", "colaboradorpass");
@@ -140,6 +147,11 @@ public class ReclamacaoFragment extends Fragment {
         call.enqueue(new Callback<List<Reclamacao>>() {
             @Override
             public void onResponse(Call<List<Reclamacao>> call, Response<List<Reclamacao>> response) {
+                // Esconder loading
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+
                 if (response.isSuccessful() && response.body() != null) {
                     List<Reclamacao> reclamacoes = response.body();
                     Log.d("API", "Reclamações recebidas: " + reclamacoes.size());
@@ -167,8 +179,14 @@ public class ReclamacaoFragment extends Fragment {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<List<Reclamacao>> call, Throwable t) {
+                // Esconder loading
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+
                 Log.e("API", "Erro na chamada: " + t.getMessage(), t);
 
                 if (getActivity() != null) {
@@ -219,5 +237,6 @@ public class ReclamacaoFragment extends Fragment {
         progressVistas = null;
         progressRespondidas = null;
         reclamacaoRecyclerView = null;
+        progressBar = null;
     }
 }

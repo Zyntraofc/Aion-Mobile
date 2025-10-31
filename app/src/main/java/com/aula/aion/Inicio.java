@@ -13,6 +13,7 @@ import android.view.ViewOutlineProvider;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,7 +22,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.aula.aion.api.ServiceAPI_NOSQL;
 import com.aula.aion.databinding.ActivityInicioBinding;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.ui.home.BottomSheetBatidaFragment;
@@ -33,14 +33,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import okhttp3.Credentials;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Inicio extends AppCompatActivity {
 
@@ -74,6 +67,8 @@ public class Inicio extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         BottomNavigationView navView = binding.navView;
 

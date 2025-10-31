@@ -15,7 +15,6 @@ import com.aula.aion.R;
 import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.BottomSheetBatidaBinding;
 import com.aula.aion.model.Batida;
-import com.aula.aion.model.Batida;
 import com.aula.aion.model.Funcionario;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -90,6 +89,7 @@ public class BottomSheetBatidaFragment extends BottomSheetDialogFragment {
         }
 
         binding.btnBaterPonto.setOnClickListener(v -> {
+            binding.btnBaterPonto.setEnabled(false);
             baterPonto();
         });
 

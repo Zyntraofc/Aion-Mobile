@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 
 import com.aula.aion.Inicio;
 import com.aula.aion.R;
-import com.aula.aion.sinal.EnviaSinalMethod;
 
 public class DashboardsFragments extends Fragment {
 
@@ -34,15 +33,13 @@ public class DashboardsFragments extends Fragment {
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setBuiltInZoomControls(true);
-        webSettings.setDisplayZoomControls(false);
+        webSettings.setDisplayZoomControls(true);
         webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.setWebViewClient(new WebViewClient());
 
         Inicio activity = (Inicio) getActivity();
         if (activity != null) {
-            Long cdMatricula = activity.getFuncionario().getCdMatricula();
-            EnviaSinalMethod enviaSinalMethod = new EnviaSinalMethod();
-            enviaSinalMethod.enviaSinal(cdMatricula);
+            String cdMatricula = activity.getFuncionario().getCdMatricula().toString();
             String powerBiUrl = "https://app.powerbi.com/view?r=eyJrIjoiYzBjY2U1Y2ItMzdkYy00ZTBlLTkzNDEtNWM0N2JlNDk5MTAwIiwidCI6ImIxNDhmMTRjLTIzOTctNDAyYy1hYjZhLTFiNDcxMTE3N2FjMCJ9&filter=public_ids_funcionario%2Flcdmatricula%20eq%20" + cdMatricula;
             Log.d("URL", powerBiUrl);
             webView.loadUrl(powerBiUrl);
