@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,7 +31,6 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import eightbitlab.com.blurview.BlurAlgorithm;
@@ -60,6 +61,7 @@ public class NotificacaoActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setupBlurView();
         setupListeners();
         Bundle bundle = getIntent().getExtras();
@@ -140,6 +142,9 @@ public class NotificacaoActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Notificacao> notificacoes = response.body();
                     Log.d("API", "Notificações recebidas: " + notificacoes.size());
+
+                    binding.progress.setVisibility(View.INVISIBLE);
+                    binding.progress.setEnabled(false);
 
                     RecyclerView recyclerView = binding.recyclerNotificacao;
                     recyclerView.setLayoutManager(new LinearLayoutManager(NotificacaoActivity.this));

@@ -2,44 +2,29 @@ package com.aula.aion.adapter;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.text.format.DateUtils;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aula.aion.EditarPerfil;
-import com.aula.aion.Perfil;
-import com.aula.aion.R;
 import com.aula.aion.api.ServiceAPI_NOSQL;
-import com.aula.aion.api.ServiceAPI_SQL;
 import com.aula.aion.databinding.BottomSheetNotificacaoBinding;
 import com.aula.aion.databinding.ItemNotificacaoBinding;
-import com.aula.aion.databinding.ItemReclamacaoBinding;
-import com.aula.aion.model.Endereco;
 import com.aula.aion.model.Notificacao;
-import com.aula.aion.model.Reclamacao;
-import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Credentials;
@@ -51,7 +36,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter.ViewHolder> {
+public class NotificacaoAdapter extends RecyclerView.Adapter<NotificacaoAdapter.ViewHolder> {
 
     private List<Notificacao> notificacoes;
     private Activity activity;
@@ -72,30 +57,46 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
         public void bind(Notificacao notificacao) {
             binding.txtTitulo.setText(notificacao.getTitulo());
             binding.txtConteudo.setText(notificacao.getDescricao());
-            LocalDateTime dataNotificacao = notificacao.getData();
+            String dataNotificacao = notificacao.getData();
 
-            if (notificacao.getStatus().equals("F"))
+            // Controla visibilidade do indicador de notificação não lida
+            if ("F".equals(notificacao.getStatus())) {
+                // Status "F" = já foi visualizada = esconde o indicador
                 binding.view.setVisibility(View.INVISIBLE);
-
-            ZonedDateTime zonedDateTime = dataNotificacao.atZone(ZoneId.systemDefault());
-            long notificationTime = zonedDateTime.toInstant().toEpochMilli();
-
-            long now = System.currentTimeMillis();
-            long diffInMillis = now - notificationTime;
-
-            long diffInHours = TimeUnit.MILLISECONDS.toHours(diffInMillis);
-
-            if (diffInHours < 24) {
-                // Menos de 1 dia: mostrar em horas (ex.: "5h")
-                binding.txtTempo.setText(diffInHours + "h");
-            } else if (diffInHours < 24 * 7) {
-                // De 1 a 6 dias: mostrar em dias (ex.: "2d")
-                long days = TimeUnit.MILLISECONDS.toDays(diffInMillis);
-                binding.txtTempo.setText(days + "d");
             } else {
-                // 7 dias ou mais: mostrar em semanas (ex.: "1sem")
-                long weeks = diffInMillis / (7L * 24 * 60 * 60 * 1000);
-                binding.txtTempo.setText(weeks + "sem");
+                // Status "A" ou qualquer outro = não foi visualizada = mostra o indicador
+                binding.view.setVisibility(View.VISIBLE);
+            }
+
+            try {
+                // Converte String para LocalDateTime
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+                LocalDateTime localDateTime = LocalDateTime.parse(dataNotificacao, formatter);
+
+                // Converte para ZonedDateTime
+                ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+                long notificationTime = zonedDateTime.toInstant().toEpochMilli();
+
+                long now = System.currentTimeMillis();
+                long diffInMillis = now - notificationTime;
+
+                long diffInHours = TimeUnit.MILLISECONDS.toHours(diffInMillis);
+
+                if (diffInHours < 24) {
+                    // Menos de 1 dia: mostrar em horas (ex.: "5h")
+                    binding.txtTempo.setText(diffInHours + "h");
+                } else if (diffInHours < 24 * 7) {
+                    // De 1 a 6 dias: mostrar em dias (ex.: "2d")
+                    long days = TimeUnit.MILLISECONDS.toDays(diffInMillis);
+                    binding.txtTempo.setText(days + "d");
+                } else {
+                    // 7 dias ou mais: mostrar em semanas (ex.: "1sem")
+                    long weeks = diffInMillis / (7L * 24 * 60 * 60 * 1000);
+                    binding.txtTempo.setText(weeks + "sem");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                binding.txtTempo.setText("--");
             }
         }
     }
@@ -111,11 +112,8 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
     @Override
     public void onBindViewHolder(@NonNull NotificacaoAdapter.ViewHolder holder, int position) {
         Notificacao notificacao = notificacoes.get(position);
-        holder.binding.view.setVisibility(View.INVISIBLE);
         holder.bind(notificacao);
-        visualiarNotificacao(notificacao.getCdNotificacao());
         exibirNotificacao(holder, notificacao);
-
     }
 
     @Override
@@ -128,7 +126,39 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
         notifyDataSetChanged();
     }
 
-    private void visualiarNotificacao(String cdNotificacao) {
+    private void exibirNotificacao(NotificacaoAdapter.ViewHolder holder, Notificacao notificacao) {
+        holder.itemView.setOnClickListener(v -> {
+
+            BottomSheetNotificacaoBinding binding = BottomSheetNotificacaoBinding.inflate(LayoutInflater.from(v.getContext()));
+            Dialog dialog = new Dialog(activity);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+            dialog.setContentView(binding.getRoot());
+
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                WindowManager.LayoutParams params = window.getAttributes();
+                params.gravity = Gravity.BOTTOM;
+                window.setAttributes(params);
+            }
+
+            binding.txtNmRemetente.setText(notificacao.getTitulo());
+            binding.txtConteudoCompleto.setText(notificacao.getDescricao());
+
+            dialog.show();
+
+            // Verifica se a notificação ainda não foi visualizada
+            if (!"F".equals(notificacao.getStatus())) {
+                visualizarNotificacao(notificacao.getCdNotificacao());
+                notificacao.setStatus("F"); // Marca localmente como visualizada
+                holder.binding.view.setVisibility(View.INVISIBLE); // Esconde o indicador
+            }
+        });
+    }
+
+    private void visualizarNotificacao(String cdNotificacao) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     String credentials = Credentials.basic("colaborador", "colaboradorpass");
@@ -162,27 +192,5 @@ public class NotificacaoAdapter extends  RecyclerView.Adapter<NotificacaoAdapter
             }
         });
     }
-    private void exibirNotificacao(NotificacaoAdapter.ViewHolder holder, Notificacao notificacao) {
-        holder.itemView.setOnClickListener(v -> {
-            BottomSheetNotificacaoBinding binding = BottomSheetNotificacaoBinding.inflate(LayoutInflater.from(v.getContext()));
-            Dialog dialog = new Dialog(activity);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-            dialog.setContentView(binding.getRoot());
-
-            Window window = dialog.getWindow();
-            if (window != null) {
-                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                WindowManager.LayoutParams params = window.getAttributes();
-                params.gravity = Gravity.BOTTOM;
-                window.setAttributes(params);
-            }
-
-            binding.txtNmRemetente.setText(notificacao.getTitulo() != null ? notificacao.getTitulo() : "Desconhecido");
-            binding.txtConteudoCompleto.setText(notificacao.getDescricao() != null && !notificacao.getDescricao().isBlank() ? notificacao.getDescricao() : "Sem conteúdo");
-
-            dialog.show();
-        });
-    }
 }
