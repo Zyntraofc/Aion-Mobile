@@ -27,10 +27,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Aion"
         tools:targetApi="31">
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -55,23 +51,29 @@
 
         <activity
             android:name=".NotificacaoActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".EditarPerfil"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Perfil"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Inicio"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Login"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".SplashScreen"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
