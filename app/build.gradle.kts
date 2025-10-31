@@ -57,4 +57,5 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging")
     implementation ("com.google.firebase:firebase-analytics")
     implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }
