@@ -41,6 +41,7 @@ public class Inicio extends AppCompatActivity {
     private ActivityInicioBinding binding;
     private static final String FOTO_NOME = "foto_perfil.jpg";
     private Retrofit retrofit;
+    private boolean isFromCalendar = false;
 
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
@@ -154,7 +155,8 @@ public class Inicio extends AppCompatActivity {
                                 controller.popBackStack(R.id.nav_home, false);
                                 return true;
                             } else {
-                                return false;
+                                NavigationUI.onNavDestinationSelected(item, controller);
+                                return true;
                             }
                         });
                     });
