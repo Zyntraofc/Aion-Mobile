@@ -34,16 +34,20 @@
 
 
                 <!-- Avatar e informações -->
+
                 <ImageView
                     android:id="@+id/img_fotoPerfil"
                     android:layout_width="128dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="128dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="100dp"
                     android:contentDescription="@string/desc_fotoPerfil"
+                    android:src="@drawable/ic_usericon"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="@color/aqua_tertiary"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_usericon"  />
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <TextView
                     android:id="@+id/txt_cargo"
@@ -133,6 +137,7 @@
                         android:padding="10dp">
 
                         <LinearLayout
+                            android:id="@+id/container_notificacao"
                             android:layout_width="match_parent"
                             android:layout_height="57dp"
                             android:gravity="center_vertical"
@@ -141,39 +146,7 @@
                             android:paddingEnd="15dp">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/poppins_medium"
-                                android:text="@string/txt_meuDesempenho"
-                                android:textColor="@color/text_gray"
-                                android:textSize="13sp" />
-
-                            <ImageView
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:background="@drawable/round_backgroud_buttons_perfil"
-                                android:contentDescription="@string/desc_meuDesempenho"
-                                android:padding="12dp"
-                                android:scaleType="fitCenter"
-                                android:src="@drawable/seta" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="330dp"
-                            android:layout_height="1dp"
-                            android:layout_gravity="center"
-                            android:background="#EEEEEE" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="57dp"
-                            android:gravity="center_vertical"
-                            android:paddingVertical="8dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp">
-
-                            <TextView
+                                android:id="@+id/txt_historico"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -183,6 +156,7 @@
                                 android:textSize="13sp" />
 
                             <ImageView
+                                android:id="@+id/btn_notificacao"
                                 android:layout_width="36dp"
                                 android:layout_height="36dp"
                                 android:background="@drawable/round_backgroud_buttons_perfil"
@@ -251,11 +225,11 @@
                                 android:textColor="@color/text_gray"
                                 android:textSize="13sp" />
 
-                            <Spinner
-                                android:id="@+id/spr_idioma"
-                                android:layout_width="207dp"
+                            <TextView
+                                android:id="@+id/txt_idioma"
+                                android:layout_width="140dp"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/my_options_array"
+                                android:text="Português (Brasil)"
                                 tools:layout_editor_absoluteX="140dp"
                                 tools:layout_editor_absoluteY="670dp" />
 
@@ -305,39 +279,6 @@
                             android:layout_gravity="center"
                             android:background="#EEEEEE" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="55dp"
-                            android:gravity="center_vertical"
-                            android:paddingVertical="8dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp">
-
-                            <ImageView
-                                android:layout_width="15dp"
-                                android:layout_height="24dp"
-                                android:contentDescription="@string/desc_localizacao"
-                                android:src="@drawable/localizacao"
-                                app:tint="@color/text_gray" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:layout_weight="1"
-                                android:fontFamily="@font/poppins_medium"
-                                android:text="@string/txt_localizacao"
-                                android:textColor="@color/text_gray"
-                                android:textSize="13sp" />
-
-                            <com.aula.aion.widgets.CustomSwitch
-                                android:id="@+id/swt_localizacao"
-                                android:layout_width="55dp"
-                                android:elevation="1dp"
-                                android:layout_height="30dp"/>
-
-                        </LinearLayout>
-
                         <View
                             android:layout_width="330dp"
                             android:layout_height="1dp"
@@ -370,6 +311,7 @@
                                 android:textSize="13sp" />
 
                             <ImageView
+                                android:id="@+id/btn_suporte"
                                 android:layout_width="34dp"
                                 android:layout_height="34dp"
                                 android:background="@drawable/round_backgroud_buttons_perfil"

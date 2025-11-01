@@ -2,11 +2,11 @@ package com.aula.aion.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-import kotlinx.serialization.Serializable;
 
-public class RelatorioPresenca {
+public class RelatorioPresenca implements Serializable {
     private LocalDate dataDia;
 
     @SerializedName("lcdfuncionario")

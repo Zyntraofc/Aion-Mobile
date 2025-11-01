@@ -1,27 +1,25 @@
 package com.aula.aion.model;
 
-import java.time.LocalDateTime;
 
 public class Notificacao {
     private String cdNotificacao;
     private int cdFuncionario;
     private String descricao;
     private String titulo;
-    private LocalDateTime data; // pode ser LocalDateTime se quiser trabalhar com datas
+    private String data;
+    private String status;
 
-    // Construtor padrão
     public Notificacao() {}
 
-    // Construtor completo
-    public Notificacao(String cdNotificacao, int cdFuncionario, String descricao, String titulo, LocalDateTime data) {
+    public Notificacao(String cdNotificacao, int cdFuncionario, String descricao, String titulo, String data, String status) {
         this.cdNotificacao = cdNotificacao;
         this.cdFuncionario = cdFuncionario;
         this.descricao = descricao;
         this.titulo = titulo;
         this.data = data;
+        this.status = status;
     }
 
-    // Getters e Setters
     public String getCdNotificacao() {
         return cdNotificacao;
     }
@@ -54,12 +52,20 @@ public class Notificacao {
         this.titulo = titulo;
     }
 
-    public LocalDateTime getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(LocalDateTime data) {
+    public void setData(String data) {
         this.data = data;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 

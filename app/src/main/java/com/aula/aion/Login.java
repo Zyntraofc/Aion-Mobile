@@ -1,15 +1,14 @@
 package com.aula.aion;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,26 +23,35 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 public class Login extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private boolean isPasswordVisible = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
 
         binding.btnEntrar.setOnClickListener(v -> {
             String email = binding.inputEmail.getText().toString();
             String senha = binding.inputSenha.getText().toString();
-            if ("".equals(email) || email.isEmpty() || "".equals(senha) || senha.isEmpty()) {
+
+            if (email.isEmpty() || senha.isEmpty()) {
+                exibirErro();
                 binding.txtErroLogin.setText("Preencha todos os campos");
-            }
-            else {
+            } else {
+                // Mostrar a ProgressBar e desabilitar o botão
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.btnEntrar.setEnabled(false);
+
                 AutenticarUsuario(email, senha);
             }
         });
@@ -54,32 +62,51 @@ public class Login extends AppCompatActivity {
             bottomSheet.show(getSupportFragmentManager(), "bottomSheet");
         });
     }
+
     private void AutenticarUsuario(String email, String senha) {
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(task -> {
+                    // Sempre esconder a ProgressBar e reabilitar o botão
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.btnEntrar.setEnabled(true);
+
                     if (task.isSuccessful()) {
                         Intent intent = new Intent(this, Inicio.class);
                         startActivity(intent);
                         finish();
                     } else {
+                        Log.e("LoginActivity", "Autenticação falhou", task.getException());
+                        exibirErro();
                         String erro = "";
                         try {
                             throw task.getException();
-                        } catch (FirebaseAuthInvalidUserException e)
-                        {
+                        } catch (FirebaseAuthInvalidUserException e) {
                             erro = "E-mail não está cadastrado";
-                            Log.e("LoginActivity", erro, e);
-                        }
-                        catch (FirebaseAuthInvalidCredentialsException e)
-                        {
+                        } catch (FirebaseAuthInvalidCredentialsException e) {
                             erro = "E-mail ou senha inválidos";
-                            Log.e("LoginActivity", erro, e);
-                        }catch (Exception e){
-                            Log.e("LoginActivity","EXCEPTION", e);
+                        } catch (Exception e) {
+                            erro = "Erro ao autenticar";
+                            Log.e("LoginActivity", "EXCEPTION", e);
                         }
                         binding.txtErroLogin.setText(erro);
-                        binding.txtErroLogin.setVisibility(binding.txtErroLogin.VISIBLE);
+                        binding.txtErroLogin.setVisibility(View.VISIBLE);
                     }
                 });
+    }
+
+    private void exibirErro(){
+        int color = ContextCompat.getColor(this, R.color.red);
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_enabled},
+                        new int[]{android.R.attr.state_pressed},
+                        new int[]{android.R.attr.state_focused},
+                        new int[]{}
+                },
+                new int[]{color, color, color, color}
+        );
+
+        binding.textInputLayout2.setBoxStrokeColorStateList(colorStateList);
+        binding.textInputLayout.setBoxStrokeColorStateList(colorStateList);
     }
 }

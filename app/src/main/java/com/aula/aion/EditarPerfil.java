@@ -6,13 +6,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,6 +22,7 @@ import com.aula.aion.databinding.ActivityEditarPerfilBinding;
 import com.aula.aion.model.ApiCep;
 import com.aula.aion.model.Funcionario;
 import com.aula.aion.model.Endereco;
+import com.aula.aion.sinal.EnviaSinalMethod;
 import com.google.gson.Gson;
 
 import java.time.LocalDate;
@@ -51,6 +51,8 @@ public class EditarPerfil extends AppCompatActivity {
         binding = ActivityEditarPerfilBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -62,7 +64,12 @@ public class EditarPerfil extends AppCompatActivity {
             setarInformacoesFuncionario(funcionario);
         }
 
-        buscarEnderecoAtual(funcionario.getCdEndereco());
+        EnviaSinalMethod enviaSinalMethod = new EnviaSinalMethod();
+        if (funcionario != null) {
+            enviaSinalMethod.enviaSinal(funcionario.getCdMatricula());
+
+            buscarEnderecoAtual(funcionario.getCdEndereco());
+        }
 
         habilitarCamposEdicao();
 
@@ -187,7 +194,7 @@ public class EditarPerfil extends AppCompatActivity {
     private void alterarEndereco(Endereco endereco) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();
@@ -321,7 +328,7 @@ public class EditarPerfil extends AppCompatActivity {
     private void buscarEnderecoAtual(Long id) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
-                    String credentials = Credentials.basic("admin", "123456");
+                    String credentials = Credentials.basic("colaborador", "colaboradorpass");
                     Request request = chain.request().newBuilder()
                             .addHeader("Authorization", credentials)
                             .build();

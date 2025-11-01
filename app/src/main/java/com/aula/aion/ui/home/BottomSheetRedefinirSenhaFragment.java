@@ -1,6 +1,5 @@
 package com.aula.aion.ui.home;
 
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +8,7 @@ import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.aula.aion.R;
 import com.aula.aion.databinding.BottomSheetRedefinirSenhaBinding;
@@ -40,8 +40,9 @@ public class BottomSheetRedefinirSenhaFragment extends BottomSheetDialogFragment
             String email = binding.inputEmailCorporativo.getText().toString();
             if (!email.isEmpty()) {
                 enviarEmailRedefinicaoSenha(email);
+            } else {
+                Toast.makeText(getContext(), "Digite um e-mail válido", Toast.LENGTH_SHORT).show();
             }
-            dismiss();
         });
     }
 
@@ -62,9 +63,9 @@ public class BottomSheetRedefinirSenhaFragment extends BottomSheetDialogFragment
         auth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        System.out.println("E-mail de redefinição enviado para: " + email);
+                        Toast.makeText(getContext(), "E-mail de redefinição foi enviado", Toast.LENGTH_SHORT).show();
                     } else {
-                        System.err.println("Erro ao enviar e-mail: " + task.getException());
+                        Toast.makeText(getContext(), "Erro ao enviar e-mail", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

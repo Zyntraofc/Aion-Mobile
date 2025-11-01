@@ -9,11 +9,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -38,6 +38,7 @@ public class SplashScreen extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivitySplashScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         mAuth = FirebaseAuth.getInstance();
 
         requestNotificationPermission();
@@ -58,7 +59,6 @@ public class SplashScreen extends AppCompatActivity {
                 FirebaseUser currentUser = mAuth.getCurrentUser();
 
                 if (currentUser != null) {
-                    //String userEmail = currentUser.getEmail();
                     Intent homeIntent = new Intent(this, Inicio.class);
                     startActivity(homeIntent);
                 } else {
