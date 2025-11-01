@@ -12,7 +12,8 @@
     <color name="background_white">#F6F6F6</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#002FFF</color>
-    <color name="red">#FF1F2D</color>
+    <color name="red">#FF5650</color>
     <color name="green">#3CF473</color>
-
+    <color name="yellow">#F4D03F</color>
+    <color name="blue_justificativa">#3C88F4</color>
 </resources>

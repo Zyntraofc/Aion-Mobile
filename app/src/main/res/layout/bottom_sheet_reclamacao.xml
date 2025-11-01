@@ -1,50 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@drawable/rounded_top_background"
-        tools:context=".ui.home.BottomSheetReclamacaoFragment">
-
-
-    <TextView
-        android:id="@+id/txt_Link2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:fontFamily="@font/poppins_medium"
-        android:text="@string/n_o_quer_confirmar_toque_aqui"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_justificar" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_justificar"
-        android:layout_width="354dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="219dp"
-        android:fontFamily="@font/poppins_semibold"
-        android:text="@string/btn_justificar"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        app:backgroundTint="@color/blue_primary"
-        app:cornerRadius="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editDescricao" />
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/rounded_top_background"
+    tools:context=".ui.home.BottomSheetReclamacaoFragment">
 
     <View
-            android:id="@+id/view"
-            android:layout_width="200dp"
-            android:layout_height="7dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/rounded_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/view"
+        android:layout_width="200dp"
+        android:layout_height="7dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txt_reclamacao"
@@ -79,31 +51,46 @@
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/txt_reclamacao" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginHorizontal="20dp"
-        app:boxBackgroundColor="@color/white"
-        app:boxBackgroundMode="outline"
-        app:boxCornerRadiusBottomEnd="30dp"
-        app:boxCornerRadiusBottomStart="30dp"
-        app:boxCornerRadiusTopEnd="30dp"
-        app:boxCornerRadiusTopStart="30dp"
-        app:endIconMode="clear_text"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/crd_motivo_falta"
+        android:layout_width="390dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="50dp"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="0dp"
+        app:contentPaddingLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_reclamacao">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_email"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:gravity="top"
-            android:hint="E-mail corporativo"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="354dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/edittext_border"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+
+            <TextView
+                android:id="@+id/txt_label_motivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:text="Motivo da Falta"
+                android:textColor="@color/dark_gray"
+                android:textSize="10sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="305dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="30dp"
+                android:backgroundTint="@color/light_gray"
+                android:spinnerMode="dropdown"
+                android:popupBackground="@color/white" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <EditText
         android:id="@+id/editDescricao"
@@ -117,7 +104,35 @@
         android:inputType="textMultiLine"
         android:padding="12dp"
         android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        tools:layout_editor_absoluteX="20dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crd_motivo_falta" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_registrar"
+        android:layout_width="354dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="200dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="@string/btn_registrar"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:backgroundTint="@color/blue_primary"
+        app:cornerRadius="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editDescricao" />
+
+    <TextView
+        android:id="@+id/txt_Link2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/n_o_quer_confirmar_toque_aqui"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_registrar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

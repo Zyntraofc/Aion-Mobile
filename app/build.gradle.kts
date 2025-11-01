@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.aula.aion"
-        minSdk = 33
+        minSdk = 30
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,4 +52,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
     implementation(libs.firebase.auth)
     implementation(libs.blurview.vversion310)
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation ("com.google.firebase:firebase-messaging")
+    implementation ("com.google.firebase:firebase-analytics")
+    implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
 }

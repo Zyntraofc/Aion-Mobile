@@ -1,33 +1,20 @@
 package com.aula.aion.model;
 
-import com.aula.aion.adapter.JustificativaAdapter;
-
-//adptar (Vinicius ABS)
 public class Justificativa {
-    private final String titulo;
-    private final String descricao;
-    private final String data;
+    private String data;
+    private int numInclusao;
 
-    public Justificativa(String titulo, String descricao, String data) {
-        this.titulo = titulo;
-        this.descricao = descricao;
+    public Justificativa(String data, int numInclusao) {
         this.data = data;
-    }
-    public Justificativa(String titulo, String data) {
-        this.titulo = titulo;
-        this.data = data;
-        this.descricao = null;
+        this.numInclusao = numInclusao;
     }
 
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
 
     public String getData() {
         return data;
+    }
+
+    public int getNumInclusao() {
+        return numInclusao;
     }
 }

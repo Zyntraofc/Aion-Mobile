@@ -50,12 +50,13 @@
     <string name="txt_localizacao">Ativar Localização</string>
     <string name="spr_idioma">Selecionar Idioma</string>
     <string name="txt_idioma">Idioma</string>
-    <string name="txt_assessibilidade">Assessibilidade</string>
+    <string name="txt_acessibilidade">Acessibilidade</string>
     <string name="str_txt_perfil">Perfil</string>
+    <string name="str_txt_editar_perfil">Editar Perfil</string>
     <string name="desc_voltar">TODO</string>
-    <string name="lbl_cargo">Analista de Dados</string>
-    <string name="lbl_nome">Jefferson Custodio</string>
-    <string name="lbl_email">jefferson.lopes@jbs.com.br</string>
+    <string name="lbl_cargo">...</string>
+    <string name="lbl_nome">...</string>
+    <string name="lbl_email">...</string>
     <string name="btn_editarPerfil">Editar Perfil</string>
     <string name="btn_sair">Sair</string>
     <string name="abrDomingo">D</string>
@@ -84,6 +85,7 @@
     <string name="desc_fotoPerfil">Foto de Perfil</string>
     <string name="desc_localizacao">Ativar Localização</string>
     <string name="btn_justificar">Justificar</string>
+    <string name="btn_registrar">Registrar</string>
     <string name="n_o_quer_confirmar_toque_aqui">
         Não quer confirmar? <strong style="color: #002FFF">Toque aqui</strong>
     </string>
@@ -91,6 +93,9 @@
     <string name="mn_justificativa">Justificaviva</string>
     <string name="mn_reclamacao">Reclamação</string>
     <string name="mn_dashboard">Dashboard</string>
-    <string name="txt_reclamacao">Registrar Ocorrência</string>
+    <string name="txt_reclamacao">Registrar Reclamação</string>
+    <string name="estado_civil_prompt">Selecione o estado civil</string>
+
+    <string name="default_notification_channel_id">fcm_default_channel</string>
 
 </resources>
